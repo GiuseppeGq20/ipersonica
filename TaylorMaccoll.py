@@ -7,7 +7,7 @@ from scipy.optimize import root_scalar
 
 
 
-def normalShock(beta: float,gas: fl.Gas) -> tuple:
+def _normalShock(beta: float,gas: fl.Gas) -> tuple:
     n=gas.n
     Mn=gas.Ma*np.sin(beta)
     # downstream  normal Mach
@@ -41,7 +41,7 @@ def normalShock(beta: float,gas: fl.Gas) -> tuple:
     return Mn2, Vw_0, Vr_0 ,Vlim ,a2
 
 
-def TaylorMaccoll(w, y, gas):
+def _TaylorMaccoll(w, y, gas):
 
     v_r, v_w = y  # unpack variables
 
@@ -57,7 +57,7 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
     # initial condition are the ones after the shock wave
 
     # calc shock relation
-    Mn2, Vw_0, Vr_0 ,Vlim ,a2 = normalShock(beta,gas)
+    Mn2, Vw_0, Vr_0 ,Vlim ,a2 = _normalShock(beta,gas)
 
     # trigger event to end ode integration
     def event(w, y):
@@ -70,7 +70,7 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
     y1_0=Vr_0; y2_0=Vw_0
     
     sol = solve_ivp(
-        lambda w, y: TaylorMaccoll(w, y, gas),
+        lambda w, y: _TaylorMaccoll(w, y, gas),
         [beta, 0.0],
         [y1_0, y2_0],
         events=event,
@@ -84,7 +84,7 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
     return sol.t ,sol.y*Vlim/a2
 
 
-def betaCone(delta: float, beta_i: float, gas: fl.Gas)-> float:
+def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     """
     Calc cone shock angle given a semi aperture cone angle
 
@@ -104,8 +104,8 @@ def betaCone(delta: float, beta_i: float, gas: fl.Gas)-> float:
     betac= root_scalar(
         error,
         method='secant',
-        x0=beta_i,
-        x1= 0.98*beta_i,
+        x0=beta_0,
+        x1= beta_1,
         maxiter=200,
         xtol=1e-8
     )
@@ -128,8 +128,9 @@ if __name__ == "__main__":
     Mr=Ma[0]
 
     deltac=np.deg2rad(20.4)
-    beta_i=fl.obliqueShock(deltac,air)
-    betac=betaCone(deltac,beta_i,air)
+    beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.98*beta_0
+    # beta_0=np.deg2rad(85) ; beta_1=np.deg2rad(86) # with this it converges to the strong solution
+    betac=betaCone(deltac,beta_0,beta_1,air)
     print("beta = ", np.rad2deg(betac))
 
     print(f"Ma = {air.Ma}  theta= {np.rad2deg(w[-1])}")
