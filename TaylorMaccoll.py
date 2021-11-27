@@ -114,7 +114,32 @@ def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     
     return betac.root
 
+def deltaLocalCone(deltaC: float, alpha: float, phi: np.ndarray) -> np.ndarray:
+    """
+    Calc euquivalent cone semi aperture for the local cone method
 
+    Parameters:
+    - deltaC: cone semiaperture in radians
+    - alpha: angle of attack in radians
+    - phi: azimutal position on the cone
+
+    Return:
+    - deltaEq: equivalent cone semi aperture in radians
+
+    Example:
+    we want to evaluate the equivalent semi aperture angle for 10 phi 
+    location equidistributed around a cone with deltaC of 10 degrees 
+    at 5 degrees of angle of attack
+    >>> import numpy as np
+    >>> deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
+    >>> phi = np.linspace(0, 2*np.pi,10)
+    >>> deltaEq= deltaLocalCone(deltaC,alpha,phi)
+    """
+    deltaEq = np.arcsin(
+            np.sin(deltaC)*np.cos(alpha) +
+            np.cos(deltaC)*np.sin(alpha)*np.cos(phi)
+            )
+    return deltaEq
 
 if __name__ == "__main__":
 
@@ -151,5 +176,9 @@ if __name__ == "__main__":
     ax2.grid()
     plt.show()
 
+    # delta equivalent
+    deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
+    phi = np.linspace(0, 2*np.pi,10)
+    deltaEq= deltaLocalCone(deltaC,alpha,phi)
 
 # %%
