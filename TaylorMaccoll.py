@@ -1,9 +1,8 @@
 # %%
-from inspect import ClassFoundException
 import numpy as np
 import matplotlib.pyplot as plt
 import flow.flows as fl
-from scipy.integrate import solve_ivp
+from scipy.integrate import solve_ivp , trapezoid
 from scipy.optimize import root_scalar
 
 
@@ -54,8 +53,17 @@ def _TaylorMaccoll(w, y, gas):
 
 
 def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
+    """
+    Solve the Taylor Maccoll equation given a shock wave angle and the type of gas
 
-    # initial condition are the ones after the shock wave
+    Parameters:
+    - beta: wave shock angle in radians
+    - gas: Gas like structure
+
+    Returns:
+    - w: omega angle at wich the solution is calculated
+    - Vr,Vw: velocity components,
+    """
 
     # calc shock relation
     Mn2, Vw_0, Vr_0 ,Vlim ,a2 = _normalShock(beta,gas)
@@ -67,7 +75,8 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
     event.terminal = True
     event.direction = 0
 
-    #initial condition
+    # initial condition
+    # note: initial condition are the ones after the shock wave
     y1_0=Vr_0; y2_0=Vw_0
     
     sol = solve_ivp(
@@ -76,11 +85,10 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
         [y1_0, y2_0],
         events=event,
         method="BDF"
-        )
+        ) #BDF backward difference to have a better resolution
 
     if not sol.success:
-        raise(RuntimeError(sol.message))
-
+        raise RuntimeError(sol.message) 
 
     return sol.t ,sol.y*Vlim/a2
 
@@ -155,6 +163,13 @@ def cpHigh(deltaC: float, alpha:float, Ma: float, phi: np.ndarray) -> np.ndarray
 
     Return:
     - Cp: value of the Cp at the given phi values
+
+    Example:
+    calc High Cp on a cone flying at Mach 3 and 5 degree of angle
+    of attack, 
+    >>> Ma=3; deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
+    >>> phi=np.linspace(0,np.pi,2)
+    >>> cpH=cpHigh(deltaC,alpha,Ma, phi=phi)
     """
 
     # function to calc cp given an arrary of equivalent semi apertures
@@ -163,7 +178,7 @@ def cpHigh(deltaC: float, alpha:float, Ma: float, phi: np.ndarray) -> np.ndarray
              1 + (16/ (Ma**2 - 1)**0.5 )*np.sin(deltaE))
         return Cp
     
-    # helper function to tidy the calculation of f Mach cone 
+    # helper function to tidy the calculation of f Mach_cone 
     def func_MachCone():
 
         delta=deltaLocalCone(deltaC,alpha,phi=np.pi/2)
@@ -183,14 +198,49 @@ def cpHigh(deltaC: float, alpha:float, Ma: float, phi: np.ndarray) -> np.ndarray
     #calc cp
     deltaE=deltaLocalCone(deltaC,alpha,phi)
     Cp=cp(deltaE)
-    Cp= Cp - (Cp -Cp_Star)*func_MachCone()
+    Cp= Cp - (Cp - Cp_Star)*func_MachCone()
     
     return Cp
 
-def calcCLCdCone():
+def calcCLCdCone(deltaC: float, alpha:float , phi:np.ndarray, cp: np.ndarray)->tuple:
+    """
+    Calc cl and cd of a cone at alpha angle of attack given cp distribution along phi
+    hypotesis: cp depends only on azimutal coordinate
 
-    # return cl,cd
-    pass
+    Parameters:
+    - deltaC: semi aperture angle of the cone, in radians
+    - alpha: angle of attack in radians
+    - phi: azimutal coordinates in radians, that span from 0 to 2pi
+    - cp: pressure coefficient on the phi coordinates
+
+    Return:
+    - cl: lift coefficient
+    - cd: drag coefficient
+
+    Example:
+    calc cl and cd of a cone using the cp from the High method
+    >>> Mach=3; deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
+    >>> phi=np.linspace(0,2*np.pi,50)
+    >>> cpH=cpHigh(deltaC,alpha,Mach, phi=phi)
+    >>> cl,cd= calcCLCdCone(deltaC,alpha,phi,cpH)
+    """
+    # check if phi span from 0 to 2pi
+    if not phi[-1] == 2*np.pi and phi[0]==0.0:
+        raise RuntimeError("phi must span from 0 to 2 pi radians")
+    
+    #check if phi and cp are the same length
+    if not phi.size == cp.size:
+        raise RuntimeError("phi and cp must have the same length")
+
+    # calc coefficients along coordinate axis
+    Cfx = trapezoid(cp,phi) * np.sin(deltaC)/(2*np.pi)
+    Cfy = trapezoid(cp*np.cos(phi),phi) * np.cos(deltaC)/(2*np.pi)
+
+    # calc aerodynamic coefficients
+    Cd= Cfx*np.cos(alpha) + Cfy*np.sin(alpha);
+    Cl=-Cfx*np.sin(alpha) + Cfy*np.cos(alpha);
+    
+    return Cl, Cd
 
 if __name__ == "__main__":
 
@@ -235,8 +285,10 @@ if __name__ == "__main__":
     deltaE=deltaLocalCone(deltaC,alpha,phi=np.pi/2)
     
     #cp High
-    Ma=3
-    phi=np.linspace(0,np.pi,2)
-    cpH=cpHigh(deltaC,alpha,Ma, phi=phi)
+    Mach=5
+    phi=np.linspace(0,2*np.pi,50)
+    cpH=cpHigh(deltaC,alpha,Mach, phi=phi)
+    print(cpH)
 
+    cl,cd= calcCLCdCone(deltaC,alpha,phi,cpH)
 # %%
