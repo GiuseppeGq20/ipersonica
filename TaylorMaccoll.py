@@ -1,4 +1,5 @@
 # %%
+from inspect import ClassFoundException
 import numpy as np
 import matplotlib.pyplot as plt
 import flow.flows as fl
@@ -141,6 +142,56 @@ def deltaLocalCone(deltaC: float, alpha: float, phi: np.ndarray) -> np.ndarray:
             )
     return deltaEq
 
+def cpHigh(deltaC: float, alpha:float, Ma: float, phi: np.ndarray) -> np.ndarray:
+
+    """
+    Calc cp of the cone using the approximation method of High
+
+    Parameters:
+    - deltaC: cone semiaperture in radians
+    - alpha: angle of attack in radians
+    - Ma: asintotical value of the Mach number
+    - phi: azimutal position on the cone
+
+    Return:
+    - Cp: value of the Cp at the given phi values
+    """
+
+    # function to calc cp given an arrary of equivalent semi apertures
+    def cp(deltaE: np.ndarray)->np.ndarray:
+        Cp = 4 * (np.sin(deltaE)**2) * (2.5 + (8/ (Ma**2 - 1)**0.5 )*np.sin(deltaE)) / (
+             1 + (16/ (Ma**2 - 1)**0.5 )*np.sin(deltaE))
+        return Cp
+    
+    # helper function to tidy the calculation of f Mach cone 
+    def func_MachCone():
+
+        delta=deltaLocalCone(deltaC,alpha,phi=np.pi/2)
+
+        f = Ma*np.cos(delta) * np.sqrt(1- np.sin(delta)/Ma) * np.power(
+                (1 + np.exp(-1 - 1.52*Ma*np.sin(delta)) )*
+                (1 + (Ma**2 * np.sin(delta)**2)/2 )
+                    ,-0.5)
+
+        f= f**(-1.5)
+        return f
+    
+    # evaluete cp at phi=pi/2
+    deltaE_star=deltaLocalCone(deltaC,alpha,phi=np.pi/2)
+    Cp_Star=cp(deltaE_star)
+    
+    #calc cp
+    deltaE=deltaLocalCone(deltaC,alpha,phi)
+    Cp=cp(deltaE)
+    Cp= Cp - (Cp -Cp_Star)*func_MachCone()
+    
+    return Cp
+
+def calcCLCdCone():
+
+    # return cl,cd
+    pass
+
 if __name__ == "__main__":
 
     # dati gas
@@ -180,5 +231,12 @@ if __name__ == "__main__":
     deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
     phi = np.linspace(0, 2*np.pi,10)
     deltaEq= deltaLocalCone(deltaC,alpha,phi)
+
+    deltaE=deltaLocalCone(deltaC,alpha,phi=np.pi/2)
+    
+    #cp High
+    Ma=3
+    phi=np.linspace(0,np.pi,2)
+    cpH=cpHigh(deltaC,alpha,Ma, phi=phi)
 
 # %%
