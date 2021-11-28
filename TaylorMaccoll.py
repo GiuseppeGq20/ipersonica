@@ -1,10 +1,10 @@
 # %%
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.sparse.linalg.interface import MatrixLinearOperator
 import flow.flows as fl
 from scipy.integrate import solve_ivp , trapezoid
-from scipy.optimize import root_scalar
-
+from scipy.optimize import root_scalar, minimize, NonlinearConstraint
 
 
 def _normalShock(beta: float,gas: fl.Gas) -> tuple:
@@ -65,6 +65,10 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
     - Vr,Vw: velocity components,
     """
 
+    #checks
+    if beta <0: 
+        raise RuntimeError("beta must be positive")
+
     # calc shock relation
     Mn2, Vw_0, Vr_0 ,Vlim ,a2 = _normalShock(beta,gas)
 
@@ -118,18 +122,63 @@ def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
         maxiter=200,
         xtol=1e-8
     )
-
+    
+    if betac.root < 0: raise RuntimeError("shock angle can't be negative")
+    
     if not betac.converged: raise RuntimeWarning(betac.flag)
     
     return betac.root
 
-def deltaMax(Ma: float):
+def deltaMax(gas:fl.Gas):
+    
+    Ma=gas.Ma
+    
+    def _normalShock(beta: float,gas: fl.Gas) -> tuple:
+        n=gas.n
+        Mn=gas.Ma*np.sin(beta)
+        # downstream  normal Mach
+        Mn2 = ((Mn**2 + n)/((n+2)*(Mn)**2 - 1))**0.5
 
-    pass
+        # densisty ratio
+        rho1rho2 = (1 + n/(Mn**2))/(n+1)
+        # temperature ratio
+        T2t1 = (1 + (Mn**2)/n)/(1 + (Mn2**2)/n)
+
+        # evaluate 2D flow deviation
+        theta2D = beta - np.arctan(np.tan(beta)*rho1rho2)
+        if theta2D < 0:
+            raise(RuntimeError("beta > beta_lim"))
+
+        return T2t1
+    
+    beta_0=1.5*np.arcsin(1/Ma)
+    beta_1=1.6*np.arcsin(1/Ma)
+
+    def func(delta):
+        beta=betaCone(delta,beta_0,beta_1,gas)
+        T2t1=_normalShock(beta,gas)
+        f= ((Ma*np.cos(beta))**2) * (T2t1)*(1 + np.tan(beta-delta)**2) -1 
+        return  f
+    
+    #x0
+    x0,_ = SolveTaylorMaccoll(beta_0,gas)
+    x0=x0[-1]
+
+
+
+    delta= minimize(
+        func,
+        x0,
+        constraints=NonlinearConstraint(lambda delta: delta, 0, np.deg2rad(90)),
+        tol=1e-4,
+        options={"maxiter":150}
+    )
+
+    return delta.x
 
 def deltaLocalCone(deltaC: float, alpha: float, phi: np.ndarray) -> np.ndarray:
     """
-    Calc euquivalent cone semi aperture for the local cone method
+    Calc equivalent cone semi aperture for the local cone method
 
     Parameters:
     - deltaC: cone semiaperture in radians
@@ -304,4 +353,8 @@ if __name__ == "__main__":
 
     cl,cd= calcCLCdCone(deltaC,alpha,phi,cpH)
     print(f"cl = {cl}\ncd = {cd}\n")
+
+
+    #delta max
+    delta=deltaMax(air)
 # %%
