@@ -123,6 +123,10 @@ def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     
     return betac.root
 
+def deltaMax(Ma: float):
+
+    pass
+
 def deltaLocalCone(deltaC: float, alpha: float, phi: np.ndarray) -> np.ndarray:
     """
     Calc euquivalent cone semi aperture for the local cone method
@@ -174,20 +178,23 @@ def cpHigh(deltaC: float, alpha:float, Ma: float, phi: np.ndarray) -> np.ndarray
 
     # function to calc cp given an arrary of equivalent semi apertures
     def cp(deltaE: np.ndarray)->np.ndarray:
-        Cp = 4 * (np.sin(deltaE)**2) * (2.5 + (8/ (Ma**2 - 1)**0.5 )*np.sin(deltaE)) / (
-             1 + (16/ (Ma**2 - 1)**0.5 )*np.sin(deltaE))
+        Cp = 4 * (np.sin(deltaE)**2) * (2.5 + (8/ ((Ma**2 - 1)**0.5) )*np.sin(deltaE)) / (
+             1 + (16/ ((Ma**2 - 1)**0.5) )*np.sin(deltaE))
         return Cp
     
     # helper function to tidy the calculation of f Mach_cone 
     def func_MachCone():
-
+        
         delta=deltaLocalCone(deltaC,alpha,phi=np.pi/2)
 
-        f = Ma*np.cos(delta) * np.sqrt(1- np.sin(delta)/Ma) * np.power(
-                (1 + np.exp(-1 - 1.52*Ma*np.sin(delta)) )*
-                (1 + (Ma**2 * np.sin(delta)**2)/2 )
-                    ,-0.5)
-
+        if Ma*np.sin(delta) < 1:
+            f = Ma*np.cos(delta) * np.sqrt(1- np.sin(delta)/Ma) / np.sqrt(
+                (1 + np.exp(-1 - 1.52*Ma*np.sin(delta)) ) *
+                (1 + (Ma**2 * np.sin(delta)**2)/4 ) )
+        else:
+            f = Ma*np.cos(delta) * np.sqrt(1- np.sin(delta)/Ma) / np.sqrt(
+                1 + 0.35* ((Ma*np.sin(delta))**1.5))
+                    
         f= f**(-1.5)
         return f
     
@@ -198,7 +205,7 @@ def cpHigh(deltaC: float, alpha:float, Ma: float, phi: np.ndarray) -> np.ndarray
     #calc cp
     deltaE=deltaLocalCone(deltaC,alpha,phi)
     Cp=cp(deltaE)
-    Cp= Cp - (Cp - Cp_Star)*func_MachCone()
+    Cp = Cp - (Cp - Cp_Star)*func_MachCone()
     
     return Cp
 
@@ -237,15 +244,15 @@ def calcCLCdCone(deltaC: float, alpha:float , phi:np.ndarray, cp: np.ndarray)->t
     Cfy = trapezoid(cp*np.cos(phi),phi) * np.cos(deltaC)/(2*np.pi)
 
     # calc aerodynamic coefficients
-    Cd= Cfx*np.cos(alpha) + Cfy*np.sin(alpha);
-    Cl=-Cfx*np.sin(alpha) + Cfy*np.cos(alpha);
+    Cd= Cfx*np.cos(alpha) + Cfy*np.sin(alpha)
+    Cl=-Cfx*np.sin(alpha) + Cfy*np.cos(alpha)
     
     return Cl, Cd
 
 if __name__ == "__main__":
 
     # dati gas
-    Ma = 3
+    Ma = 10
     air = fl.air(Ma)
     beta = np.deg2rad(30)
 
@@ -253,10 +260,13 @@ if __name__ == "__main__":
     Mw=Ma[1]
     Mr=Ma[0]
 
-    deltac=np.deg2rad(20.4)
+    deltac=np.deg2rad(10)
     beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.98*beta_0
     # beta_0=np.deg2rad(85) ; beta_1=np.deg2rad(86) # with this it converges to the strong solution
     betac=betaCone(deltac,beta_0,beta_1,air)
+    w,Ma = SolveTaylorMaccoll(betac,air)
+    Mw=Ma[1]
+    Mr=Ma[0]
     print("beta = ", np.rad2deg(betac))
 
     print(f"Ma = {air.Ma}  theta= {np.rad2deg(w[-1])}")
@@ -277,6 +287,7 @@ if __name__ == "__main__":
     ax2.grid()
     plt.show()
 
+
     # delta equivalent
     deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
     phi = np.linspace(0, 2*np.pi,10)
@@ -285,10 +296,12 @@ if __name__ == "__main__":
     deltaE=deltaLocalCone(deltaC,alpha,phi=np.pi/2)
     
     #cp High
-    Mach=5
+    Mach=10.0
+    deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
     phi=np.linspace(0,2*np.pi,50)
     cpH=cpHigh(deltaC,alpha,Mach, phi=phi)
-    print(cpH)
+    plt.plot(np.rad2deg(phi),cpH); plt.show()
 
     cl,cd= calcCLCdCone(deltaC,alpha,phi,cpH)
+    print(f"cl = {cl}\ncd = {cd}\n")
 # %%
