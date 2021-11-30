@@ -21,7 +21,16 @@ class Gas:
         self.a= (self.gamma*self.R*self.T)**0.5 #m/s
         self.H= self.cp*self.T + 0.5*((self.Ma*self.a)**2) #J
 
+# class Gas():
 
+#     def __init__(self,dictfile: dict) -> None:
+
+#         for key in dictfile:
+#             setattr(self,key,dictfile[key])
+        
+#         self.cp=self.R* self.gamma /(self.gamma - 1)
+#         self.a= (self.gamma*self.R*self.T)**0.5 #m/s
+#         self.H= self.cp*self.T + 0.5*((self.Ma*self.a)**2)
 
 class air(Gas):
     Ma:float
