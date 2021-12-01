@@ -4,7 +4,7 @@ from dataclasses import InitVar, dataclass, field
 
 
 @dataclass
-class Gas:
+class GasDataclass:
     Ma:float
     gamma: float = field(init=False)
     R: float = field(init=False) #Nm/kgK
@@ -21,31 +21,23 @@ class Gas:
         self.a= (self.gamma*self.R*self.T)**0.5 #m/s
         self.H= self.cp*self.T + 0.5*((self.Ma*self.a)**2) #J
 
-# class Gas():
+class Gas:
 
-#     def __init__(self,dictfile: dict) -> None:
+    def __init__(self,dictfile: dict) -> None:
 
-#         for key in dictfile:
-#             setattr(self,key,dictfile[key])
+        for key in dictfile:
+            setattr(self,key,dictfile[key])
         
-#         self.cp=self.R* self.gamma /(self.gamma - 1)
-#         self.a= (self.gamma*self.R*self.T)**0.5 #m/s
-#         self.H= self.cp*self.T + 0.5*((self.Ma*self.a)**2)
+        self.cp=self.R* self.gamma /(self.gamma - 1)
+        self.a= (self.gamma*self.R*self.T)**0.5 #m/s
+        self.H= self.cp*self.T + 0.5*((self.Ma*self.a)**2)
 
-class air(Gas):
-    Ma:float
-    gamma= 1.4
-    R=287.05 #Nm/kgK
-    T=273.0 # K
-    rho=0.129 #kg/m3
-    p= 0.1*101325 #Pa 
-    n = 5 #dof
 
 
 def isentropicFlow():
     pass
 
-def obliqueShock(theta: float,gas: Gas)->Gas:
+def obliqueShock(theta: float,gas: Gas)-> float:
     """
     calc 2D schock angle
 

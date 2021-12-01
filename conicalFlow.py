@@ -28,10 +28,12 @@ def _normalShock(beta: float,gas: fl.Gas) -> tuple:
     # evaluate 2D flow deviation
     theta2D = beta - np.arctan(np.tan(beta)*rho1rho2)
 
-    if theta2D < 0:
-        raise(RuntimeError("beta > beta_lim"))
+    # if theta2D < 0:
+    #     raise(RuntimeError("beta > beta_lim"))
     # evaluate downstream Mach number
-    M2 = Mn2/np.sin(beta-theta2D)
+    Mt2= gas.Ma*np.cos(beta)/T2t1
+    M2= (Mn2**2 + Mt2**2)**0.5
+    # M2 = Mn2/np.sin(beta-theta2D)
     # calc downstream sound speed
     a2 = gas.a * np.sqrt(T2t1)
 
@@ -258,7 +260,7 @@ def calcCLCdCone(deltaC: float, alpha:float , phi:np.ndarray, cp: np.ndarray)->t
 if __name__ == "__main__":
 
     # dati gas
-    Ma = 2
+    Ma = 5
     dict_air={
     "Ma": Ma,
     "gamma": 1.4,
@@ -268,8 +270,8 @@ if __name__ == "__main__":
     "p": 0.1*101325, 
     "n" : 5
 }
-    # air = fl.Gas(dict_air)
-    air = fl.air(Ma)
+    air = fl.Gas(dict_air)
+
     beta = np.deg2rad(30)
 
     w,Ma = SolveTaylorMaccoll(beta,air)
@@ -278,7 +280,7 @@ if __name__ == "__main__":
 
     deltac=np.deg2rad(10)
     beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.98*beta_0
-    # beta_0=np.deg2rad(85) ; beta_1=np.deg2rad(86) # with this it converges to the strong solution
+    #beta_0=np.deg2rad(85) ; beta_1=np.deg2rad(86) # with this it converges to the strong solution
     betac=betaCone(deltac,beta_0,beta_1,air)
     w,Ma = SolveTaylorMaccoll(betac,air)
     Mw=Ma[1]
@@ -301,7 +303,7 @@ if __name__ == "__main__":
     ax2.set_ylabel(r"$Ma_{r}$")
     ax2.set_xlabel(r"$\omega$")
     ax2.grid()
-    # plt.show()
+    plt.show()
 
 
     # delta equivalent
@@ -316,10 +318,11 @@ if __name__ == "__main__":
     deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
     phi=np.linspace(0,2*np.pi,50)
     cpH=cpHigh(deltaC,alpha,Mach, phi=phi)
-    plt.plot(np.rad2deg(phi),cpH); # plt.show()
+    plt.plot(np.rad2deg(phi),cpH);  plt.show()
 
     cl,cd= calcCLCdCone(deltaC,alpha,phi,cpH)
     print(f"cl = {cl}\ncd = {cd}\n")
 
+    
 
 # %%
