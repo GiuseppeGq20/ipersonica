@@ -80,6 +80,23 @@ def obliqueShock(theta: float,gas: Gas)-> float:
 
 if __name__=="__main__":
 
-    import doctest
-    doctest.testmod()
-    
+    # import doctest
+    # doctest.testmod()
+    Ma=np.linspace(1,20,50)
+    dict_air={
+    "Ma": 1,
+    "gamma": 1.4,
+    "R":287.05,
+    "T":273.0,
+    "rho":0.129,
+    "p": 0.1*101325, 
+    "n" : 5}
+    beta=np.zeros_like(Ma)
+    for i in range(Ma.size):
+        dict_air["Ma"]=Ma[i]
+        air=Gas(dict_air)
+        beta[i]=obliqueShock(np.deg2rad(5),air)
+    print(beta)
+    import matplotlib.pyplot as plt
+    plt.plot(beta)
+    plt.show()
