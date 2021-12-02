@@ -31,21 +31,20 @@ def _normalShock(beta: float,gas: fl.Gas) -> tuple:
     # if theta2D < 0:
     #     raise(RuntimeError("beta > beta_lim"))
     # evaluate downstream Mach number
-    Mt2= gas.Ma*np.cos(beta)/T2t1
+    Mt2= gas.Ma*np.cos(beta)/np.sqrt(T2t1)
     M2= (Mn2**2 + Mt2**2)**0.5
     # M2 = Mn2/np.sin(beta-theta2D)
     # calc downstream sound speed
-    a2 = gas.a * np.sqrt(T2t1)
+    a2 = float(gas.a) * np.sqrt(T2t1)
 
     # calc Vlim
     Vlim = (2*gas.H)**0.5
 
     # Initial condition for integrating taylor-Maccol eqs., adimensional velocities
-    Vw_0 = -M2*a2*np.sin(beta-theta2D)/Vlim  # w component
-    Vr_0 = M2*a2*np.cos(beta-theta2D)/Vlim # radial component
+    Vw_0 = -Mn2*a2/Vlim  # w component
+    Vr_0 = Mt2*a2/Vlim # radial component
 
     return Mn2, Vw_0, Vr_0 ,Vlim ,a2
-
 
 def _TaylorMaccoll(w, y, gas):
 
@@ -56,7 +55,6 @@ def _TaylorMaccoll(w, y, gas):
      (v_r*(v_w**2) - A*(2*v_r + (v_w/np.tan(w)))) / (A - v_w**2)]
 
     return dydw
-
 
 def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
     """
@@ -80,10 +78,9 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
 
     # trigger event to end ode integration
     def event(w, y):
-        v_r, v_w = y
+        _, v_w = y
         return v_w
     event.terminal = True
-    event.direction = 0
 
     # initial condition
     # note: initial condition are the ones after the shock wave
@@ -101,7 +98,6 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
         raise RuntimeError(sol.message) 
 
     return sol.t ,sol.y*Vlim/a2
-
 
 def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     """
@@ -134,6 +130,81 @@ def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     if not betac.converged: raise RuntimeWarning(betac.flag)
     
     return betac.root
+
+def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
+    """
+    Calc max semi aperture angle of a cone at zero angle of attack
+    and max shock angle given the asintotic Mach
+
+    Parameters:
+    - gas: 
+    - Mach: optional, numpy ndarray of number of mach at which calculating
+            deltaMax and shock angle
+    
+    Return:
+    - delta: ndarray of semi aperture cone angles in radians
+    - beta: ndarray of shock angles in radians
+    """
+
+    if isinstance(Mach, type(None)):
+        Mach=np.array([gas.Ma])
+
+    # to use also Single Mach values given as float or int
+    elif isinstance(Mach,(int,float)):
+        Mach=np.array([Mach])
+    
+    # check is Mach number is subsonic
+    if isinstance(Mach,np.ndarray) and Mach.any() <1.0:
+        raise RuntimeError("Mach number must be greater than 1")
+    
+
+    #shock relation used
+    def _normalShock(beta: float,gas: object) -> tuple:
+
+        # if beta <0: 
+        #     raise RuntimeError("beta must be positive")
+            
+        n=gas.n
+        # normal mach
+        Mn=gas.Ma*np.sin(beta)
+        # downstream  normal Mach
+        Mn2 = ((Mn**2 + n)/((n+2)*(Mn)**2 - 1))**0.5            
+        # densisty ratio
+        rho1rho2 = (1 + n/(Mn**2))/(n+1)
+        # evaluate 2D flow deviation
+        theta2D = beta - np.arctan(np.tan(beta)*rho1rho2)
+        # evaluate downstream Mach number
+        M2 = Mn2/np.sin(beta-theta2D)
+
+        return M2**2
+
+    #initialize array of deltas cone
+    delta=np.zeros_like(Mach)
+    beta=np.zeros_like(Mach)
+
+    for i in range(Mach.size):
+
+        # gas=Gas(Mach[i])
+        # gas=Gas
+        gas.Ma = Mach[i]
+        #update properties that depends on Mach
+        gas.H= gas.cp*gas.T + 0.5*((gas.Ma*gas.a)**2)
+        #dictfile["Ma"]=Mach[i]
+        # gas=Gas(dictfile)
+        
+        result=root_scalar(
+            lambda beta: _normalShock(beta,gas) - 1,
+            method='secant',
+            x0=np.pi/3,
+            x1=np.pi/4,
+            maxiter=100,
+            rtol=1e-8)
+        
+        beta[i]=result.root
+        omega,_ = SolveTaylorMaccoll(result.root,gas)
+        delta[i]=omega[-1]
+    
+    return delta, beta
 
 def deltaLocalCone(deltaC: float, alpha: float, phi: np.ndarray) -> np.ndarray:
     """
@@ -260,7 +331,7 @@ def calcCLCdCone(deltaC: float, alpha:float , phi:np.ndarray, cp: np.ndarray)->t
 if __name__ == "__main__":
 
     # dati gas
-    Ma = 5
+    Ma = 1.7
     dict_air={
     "Ma": Ma,
     "gamma": 1.4,
@@ -268,20 +339,21 @@ if __name__ == "__main__":
     "T":273.0,
     "rho":0.129,
     "p": 0.1*101325, 
-    "n" : 5
-}
+    "n" : 5}
+
     air = fl.Gas(dict_air)
 
-    beta = np.deg2rad(30)
+    beta = np.arcsin(1.2/Ma)
 
     w,Ma = SolveTaylorMaccoll(beta,air)
     Mw=Ma[1]
     Mr=Ma[0]
 
     deltac=np.deg2rad(10)
-    beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.98*beta_0
-    #beta_0=np.deg2rad(85) ; beta_1=np.deg2rad(86) # with this it converges to the strong solution
+    beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.8*beta_0
+    #beta_0=np.deg2rad(85) ; beta_1=np.deg2rad(60) # with this it converges to the strong solution
     betac=betaCone(deltac,beta_0,beta_1,air)
+
     w,Ma = SolveTaylorMaccoll(betac,air)
     Mw=Ma[1]
     Mr=Ma[0]
@@ -323,6 +395,21 @@ if __name__ == "__main__":
     cl,cd= calcCLCdCone(deltaC,alpha,phi,cpH)
     print(f"cl = {cl}\ncd = {cd}\n")
 
+    x=np.linspace(0,np.pi/2,50)
+    Mach = 25 - (25 - 1.1)* np.cos(x)
+
+    air=fl.Gas(dict_air)
+    delta,_=calcMaxDelta(air)
+    delta,beta=calcMaxDelta(air,Mach=Mach)
+    delta=np.rad2deg(delta)
+    beta=np.rad2deg(beta)
+
+    plt.plot(Mach,delta,"ko",label=r"$\delta$")
+    plt.plot(Mach,beta,"bo",label=r"$\beta$")
+    plt.legend()
+    plt.grid()
+    plt.xlabel("Ma")
+    plt.show()
     
 
 # %%
