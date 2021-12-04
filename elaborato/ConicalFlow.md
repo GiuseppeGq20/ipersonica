@@ -28,7 +28,14 @@ Per risolvere il problema si puó adottare il seguente schema risolutivo:
 
    
 
-## massimo angolo di semiapertura del cono
+## massimo angolo di semiapertura del cono a fissato $Ma_\infty$
+
+Il massimo angolo di apertura del cono $\delta_c$ corrisponde a quell' angolo per cui il numero numero di mach a valle dell' onda d' urto è unitario. 
+Si può impostare la seguente strategia per risolvere questo problema:
+
+- definire la funzione $f(Ma_\infty , \beta) = M_2 -1$
+- trovare l' angolo $\beta$ per cui $f=0$ 
+- Integrare le equazioni di Taylor Maccoll, noti $\beta$ e $Ma_\infty$ , da cui si può ottenere $\delta_{c,max}$
 
 ## calcolo coefficienti aerodinamici
 
