@@ -1,6 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy.integrate import odeint
-
 
 def temp_to_sos(T):
     # Speed of sound in dry air given temperature in K
@@ -85,7 +85,7 @@ def cone_shock(cone_angle, Ma, T, p, rho):
         v_theta = v_y * np.cos(B) - v_x * np.sin(B)
         v_r = v_y * np.sin(B) + v_x * np.cos(B)
         y0 = [v_r, v_theta]
-        thetas = np.linspace(B, cone_angle, 2000)
+        thetas = np.linspace(B, cone_angle, 500)
 
         sol = odeint(taylor_maccoll, y0, thetas)
         if sol[-1, 1] < 0:
@@ -100,7 +100,8 @@ print('Wedge, downstream Mach number', result[2])
 
 
 # Example of a cone with half-angle of 10 degrees in Mach 2.1 flow:
-result = cone_shock(10 * np.pi / 180, 2.1, 280, 10000, 0.1)
+# result = cone_shock(10  * np.pi / 180, 2.1, 273.0, 0.1*101325, 0.129)
+result = cone_shock(10  * np.pi / 180, 2.1, 280.0, 10000, 0.1)
 print('Cone, shock angle in degrees', result[0] * 180/np.pi)
 print('Cone, downstream Mach number', result[2])
 # Returns 32 degrees and Mach 1.95

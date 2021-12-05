@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.optimize import root_scalar
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass, field
 
 
 @dataclass

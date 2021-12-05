@@ -1,7 +1,9 @@
-
+# %%
 import numpy as np
-from scipy.integrate import  trapezoid
-from scipy.optimize.optimize import main
+import flows as fl
+from scipy.integrate import trapezoid
+import angles
+
 
 def deltaLocalCone(deltaC: float, alpha: float, phi: np.ndarray) -> np.ndarray:
     """
@@ -125,11 +127,22 @@ def calcCLCdCone(deltaC: float, alpha:float , phi:np.ndarray, cp: np.ndarray)->t
     
     return Cl, Cd
 
-
 if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
-    
+    # dati gas
+    Ma = 10
+    dict_air={
+    "Ma": Ma,
+    "gamma": 1.4,
+    "R":287.05,
+    "T":273.0,
+    "rho":0.129,
+    "p": 0.1*101325, 
+    "n" : 5}
+
+    air = fl.Gas(dict_air)  
+
     # delta equivalent
     deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
     phi = np.linspace(0, 2*np.pi,10)
@@ -146,3 +159,8 @@ if __name__ == "__main__":
 
     cl,cd= calcCLCdCone(deltaC,alpha,phi,cpH)
     print(f"cl = {cl}\ncd = {cd}\n")
+
+
+    
+
+# %%

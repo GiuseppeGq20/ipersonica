@@ -1,6 +1,8 @@
 import numpy as np
-from scipy.optimize import root_scalar
-from dataclasses import InitVar, dataclass, field
+from scipy.optimize import root_scalar, fsolve
+from dataclasses import dataclass, field
+
+from scipy.optimize.minpack import fsolve
 
 
 @dataclass
@@ -62,18 +64,14 @@ def obliqueShock(theta: float,gas: Gas)-> float:
     elif gas.Ma < 4 : beta0= np.arcsin(1/gas.Ma)
     else : beta0 = theta*((gas.n+1)/(2*gas.n) + np.sqrt( ((gas.n+1)/(2*gas.n))**2 + (gas.Ma*theta)**-2 ))
 
-    beta= root_scalar(
+    beta= fsolve(
         lambda beta: (1/(1+gas.n))*(1+ gas.n/((gas.Ma**2)*np.sin(beta)*np.sin(beta))) - np.tan(beta - theta)/np.tan(beta),
-        method='secant',
         x0= beta0,
-        x1=1.3*beta0,
-        maxiter=200,
-        xtol=1e-4
     )
-
-    if not beta.converged: raise RuntimeWarning(beta.flag)
+    beta=float(beta)
+    if beta <0: raise RuntimeError("beta is negative")
     
-    return beta.root
+    return beta
 
 
 
@@ -82,7 +80,7 @@ if __name__=="__main__":
 
     # import doctest
     # doctest.testmod()
-    Ma=np.linspace(1,20,50)
+    Ma=np.linspace(1,10,100)
     dict_air={
     "Ma": 1,
     "gamma": 1.4,
@@ -98,5 +96,5 @@ if __name__=="__main__":
         beta[i]=obliqueShock(np.deg2rad(5),air)
     print(beta)
     import matplotlib.pyplot as plt
-    plt.plot(beta)
+    plt.plot(Ma,np.rad2deg(beta))
     plt.show()

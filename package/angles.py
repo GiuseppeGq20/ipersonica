@@ -1,9 +1,9 @@
-import taylorMaccoll as tm
-import flows as fl
-from scipy.optimize import root_scalar
 import numpy as np
+from scipy.optimize import root_scalar
+import TaylorMaccoll as tm
+import flows as fl
 
-def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
+def betaCone(delta: float, gas: fl.Gas)-> float:
     """
     Calc cone shock angle given a semi aperture cone angle
 
@@ -15,25 +15,21 @@ def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     Returns:
     - beta: cone shock angle in radians
     """
-
-    def error(beta):
-        w,_= tm.SolveTaylorMaccoll(beta,gas)
-        return w[-1] - delta
+    def obliqueShock(angle):
+        x = np.tan(delta)
+        for beta in np.arange(1, 500) * np.pi/1000:
+            r = 2 / np.tan(beta) * (gas.Ma**2 * np.sin(beta)**2 - 1) / (gas.Ma**2 * (gas.gamma + np.cos(2 * beta)) + 2)
+            if r > x:
+                break
+        return beta
     
-    betac= root_scalar(
-        error,
-        method='secant',
-        x0= beta_0,
-        x1= beta_1,
-        maxiter=100,
-        xtol=1e-8
-    )
-    
-    if betac.root < 0: raise RuntimeError("shock angle can't be negative")
-    
-    if not betac.converged: raise RuntimeWarning(betac.flag)
-    
-    return betac.root
+    wedgeAngles = np.linspace(delta, 0, 300)
+    for wedgeAngle in wedgeAngles:
+        beta=obliqueShock(wedgeAngle)
+        _,Ma=tm.solveTaylorMaccoll(beta,gas)
+        Ma_omega=Ma[1]
+        if Ma_omega[-1]<0:
+            return beta
 
 def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
     """
@@ -47,7 +43,7 @@ def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
     
     Return:
     - delta: ndarray of semi aperture cone angles in radians
-    - beta: ndarray of shock angles in radians
+    - beta: ndarray of shock angles corresponding to M2=1 in radians
     """
 
     if isinstance(Mach, type(None)):
@@ -105,16 +101,16 @@ def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
             rtol=1e-8)
         
         beta[i]=result.root
-        omega,_ = tm.SolveTaylorMaccoll(result.root,gas)
+        omega,_ = tm.solveTaylorMaccoll(result.root,gas)
         delta[i]=omega[-1]
     
     return delta, beta
 
-if __name__=="__main__":
-    import matplotlib.pyplot as plt
+if __name__ == "__main__":
 
+    import matplotlib.pyplot as plt
     # dati gas
-    Ma = 10
+    Ma =2.1
     dict_air={
     "Ma": Ma,
     "gamma": 1.4,
@@ -124,24 +120,39 @@ if __name__=="__main__":
     "p": 0.1*101325, 
     "n" : 5}
 
-    air=fl.Gas(dict_air)
-    
+    air = fl.Gas(dict_air)
     deltac=np.deg2rad(10)
-    beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.8*beta_0
+    # beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.8*beta_0
     #beta_0=np.deg2rad(85) ; beta_1=np.deg2rad(60) # with this it converges to the strong solution
-    betac=betaCone(deltac,beta_0,beta_1,air)
+    betac=betaCone(deltac,air)
 
-    w,Ma = tm.SolveTaylorMaccoll(betac,air)
+    w,Ma = tm.solveTaylorMaccoll(betac,air)
     Mw=Ma[1]
     Mr=Ma[0]
-    print("beta = ", np.rad2deg(betac))
+    print("beta cone = ", np.rad2deg(betac))
 
-    print(f"Ma = {air.Ma}  theta= {np.rad2deg(w[-1])}")
+    print(f"Ma = {air.Ma}  deltatheta= {np.rad2deg(w[-1]-deltac)}")
+    # print(f"beta2D= {np.rad2deg(beta2D)} \n betaCone= {np.rad2deg(beta)}")
+
+    fig, ax1 = plt.subplots()
+    ax1.plot(np.rad2deg(w), Mw)
+    ax1.set_title(r"grafico $\omega$ - $Ma_{\omega}$")
+    ax1.set_ylabel(r"$Ma_{\omega}$")
+    ax1.set_xlabel(r"$\omega$")
+    ax1.grid()
+
+    fig, ax2 = plt.subplots()
+    ax2.plot(np.rad2deg(w), Mr)
+    ax2.set_title(r"grafico $\omega$ - $Ma_{r}$")
+    ax2.set_ylabel(r"$Ma_{r}$")
+    ax2.set_xlabel(r"$\omega$")
+    ax2.grid()
+    plt.show()
 
     x=np.linspace(0,np.pi/2,50)
     Mach = 25 - (25 - 1.1)* np.cos(x)
 
-
+    air=fl.Gas(dict_air)
     delta,_=calcMaxDelta(air)
     delta,beta=calcMaxDelta(air,Mach=Mach)
     delta=np.rad2deg(delta)

@@ -1,12 +1,8 @@
-# %%
 import numpy as np
-import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp 
 import flows as fl
-from scipy.integrate import solve_ivp , trapezoid
-from scipy.optimize import root_scalar
 
-
-def normalShock(beta: float,gas: fl.Gas) -> tuple:
+def _normalShock(beta: float,gas: fl.Gas) -> tuple:
 
     if beta <0: 
         raise RuntimeError("beta must be positive")
@@ -46,7 +42,7 @@ def normalShock(beta: float,gas: fl.Gas) -> tuple:
 
     return Mn2, Vw_0, Vr_0 ,Vlim ,a2
 
-def _taylorMaccoll(w, y, gas):
+def taylorMaccoll(w, y, gas):
 
     v_r, v_w = y  # unpack variables
 
@@ -56,7 +52,7 @@ def _taylorMaccoll(w, y, gas):
 
     return dydw
 
-def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
+def solveTaylorMaccoll(beta: float, gas: fl.Gas):
     """
     Solve the Taylor Maccoll equation given a shock wave angle and the type of gas
 
@@ -74,7 +70,7 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
         raise RuntimeError("beta must be positive")
 
     # calc shock relation
-    _, Vw_0, Vr_0 ,Vlim ,a2 = normalShock(beta,gas)
+    _, Vw_0, Vr_0 ,Vlim ,a2 = _normalShock(beta,gas)
 
     # trigger event to end ode integration
     def event(w, y):
@@ -87,7 +83,7 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
     y1_0=Vr_0; y2_0=Vw_0
     
     sol = solve_ivp(
-        lambda w, y: _taylorMaccoll(w, y, gas),
+        lambda w, y: taylorMaccoll(w, y, gas),
         [beta, 0.0],
         [y1_0, y2_0],
         events=event,
@@ -100,7 +96,6 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
     return sol.t ,sol.y*Vlim/a2
 
 if __name__ == "__main__":
-
     # dati gas
     Ma = 10
     dict_air={
@@ -116,26 +111,6 @@ if __name__ == "__main__":
 
     beta = np.arcsin(1.2/Ma)
 
-    w,Ma = SolveTaylorMaccoll(beta,air)
+    w,Ma = solveTaylorMaccoll(beta,air)
     Mw=Ma[1]
     Mr=Ma[0]
-
-
-    # print(f"beta2D= {np.rad2deg(beta2D)} \n betaCone= {np.rad2deg(beta)}")
-
-    fig, ax1 = plt.subplots()
-    ax1.plot(np.rad2deg(w), Mw)
-    ax1.set_title(r"grafico $\omega$ - $Ma_{\omega}$")
-    ax1.set_ylabel(r"$Ma_{\omega}$")
-    ax1.set_xlabel(r"$\omega$")
-    ax1.grid()
-
-    fig, ax2 = plt.subplots()
-    ax2.plot(np.rad2deg(w), Mr)
-    ax2.set_title(r"grafico $\omega$ - $Ma_{r}$")
-    ax2.set_ylabel(r"$Ma_{r}$")
-    ax2.set_xlabel(r"$\omega$")
-    ax2.grid()
-    plt.show()
-
-# %%

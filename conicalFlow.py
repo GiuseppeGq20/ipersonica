@@ -143,7 +143,7 @@ def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
     
     Return:
     - delta: ndarray of semi aperture cone angles in radians
-    - beta: ndarray of shock angles in radians
+    - beta: ndarray of shock angles corresponding to M2=1 in radians
     """
 
     if isinstance(Mach, type(None)):
@@ -331,7 +331,7 @@ def calcCLCdCone(deltaC: float, alpha:float , phi:np.ndarray, cp: np.ndarray)->t
 if __name__ == "__main__":
 
     # dati gas
-    Ma = 1.7
+    Ma = 10
     dict_air={
     "Ma": Ma,
     "gamma": 1.4,
