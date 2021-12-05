@@ -13,6 +13,7 @@ def _normalShock(beta: float,gas: fl.Gas) -> tuple:
      
     n=gas.n
     Mn=gas.Ma*np.sin(beta)
+    # if Mn<1: raise RuntimeError("Mn is subsonic")
     # downstream  normal Mach
     Mn2 = ((Mn**2 + n)/((n+2)*(Mn)**2 - 1))**0.5
 
@@ -28,8 +29,8 @@ def _normalShock(beta: float,gas: fl.Gas) -> tuple:
     # evaluate 2D flow deviation
     theta2D = beta - np.arctan(np.tan(beta)*rho1rho2)
 
-    # if theta2D < 0:
-    #     raise(RuntimeError("beta > beta_lim"))
+    if theta2D < 0:
+        raise(RuntimeError("beta > beta_lim"))
     # evaluate downstream Mach number
     Mt2= gas.Ma*np.cos(beta)/np.sqrt(T2t1)
     M2= (Mn2**2 + Mt2**2)**0.5
@@ -167,6 +168,7 @@ def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
         n=gas.n
         # normal mach
         Mn=gas.Ma*np.sin(beta)
+        #if Mn<1: raise RuntimeError("Mn is subsonic")
         # downstream  normal Mach
         Mn2 = ((Mn**2 + n)/((n+2)*(Mn)**2 - 1))**0.5            
         # densisty ratio
