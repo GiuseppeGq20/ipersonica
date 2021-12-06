@@ -76,6 +76,26 @@ def obliqueShock(theta: float,gas: Gas)-> float:
     return beta.root
 
 
+def normalShockRatio(gas: Gas):
+    Ma2 = np.sqrt((gas.Ma**2 + gas.n) / ((gas.n + 2)*(gas.Ma**2) -1 ))
+    p2p1= (1 + gas.gamma*(gas.Ma**2)) / (1 + gas.gamma*(Ma2**2))
+    rho2rho1=(1/p2p1)* ((gas.Ma/Ma2)**2)
+    T2T1=( 1 + (gas.Ma**2)/gas.n) / ( 1 + (Ma2**2)/gas.n)
+    
+    return Ma2,p2p1,rho2rho1,T2T1
+
+def normalShock(gas: Gas):
+    Ma2,p2p1,rho2rho1,T2T1 = normalShockRatio(gas)
+    dict2={
+        "Ma": Ma2,
+        "gamma": gas.gamma,
+        "R":gas.R,
+        "T":gas.T*T2T1,
+        "rho":gas.rho*rho2rho1,
+        "p": gas.p*p2p1, 
+        "n" : gas.n
+    }
+    return Gas(dict2)
 
 
 if __name__=="__main__":
