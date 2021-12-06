@@ -6,46 +6,6 @@ from scipy.integrate import solve_ivp , trapezoid
 from scipy.optimize import root_scalar
 
 
-def _normalShock(beta: float,gas: fl.Gas) -> tuple:
-
-    if beta <0: 
-        raise RuntimeError("beta must be positive")
-     
-    n=gas.n
-    Mn=gas.Ma*np.sin(beta)
-    # if Mn<1: raise RuntimeError("Mn is subsonic")
-    # downstream  normal Mach
-    Mn2 = ((Mn**2 + n)/((n+2)*(Mn)**2 - 1))**0.5
-
-    # densisty ratio
-    rho1rho2 = (1 + n/(Mn**2))/(n+1)
-
-    # pressure ratio
-    p2p1 = ((n+2)*(Mn)**2 - 1)/(n+1)
-
-    # temperature ratio
-    T2t1 = (1 + (Mn**2)/n)/(1 + (Mn2**2)/n)
-
-    # evaluate 2D flow deviation
-    theta2D = beta - np.arctan(np.tan(beta)*rho1rho2)
-
-    if theta2D < 0:
-        raise(RuntimeError("beta > beta_lim"))
-    # evaluate downstream Mach number
-    Mt2= gas.Ma*np.cos(beta)/np.sqrt(T2t1)
-    M2= (Mn2**2 + Mt2**2)**0.5
-    # M2 = Mn2/np.sin(beta-theta2D)
-    # calc downstream sound speed
-    a2 = float(gas.a) * np.sqrt(T2t1)
-
-    # calc Vlim
-    Vlim = (2*gas.H)**0.5
-
-    # Initial condition for integrating taylor-Maccol eqs., adimensional velocities
-    Vw_0 = -Mn2*a2/Vlim  # w component
-    Vr_0 = Mt2*a2/Vlim # radial component
-
-    return Mn2, Vw_0, Vr_0 ,Vlim ,a2
 
 def _TaylorMaccoll(w, y, gas):
 
@@ -75,7 +35,12 @@ def SolveTaylorMaccoll(beta: float, gas: fl.Gas):
         raise RuntimeError("beta must be positive")
 
     # calc shock relation
-    _, Vw_0, Vr_0 ,Vlim ,a2 = _normalShock(beta,gas)
+    # _, Vw_0, Vr_0 ,Vlim ,a2 = _normalShock(beta,gas)
+    Mn2,p2p1,rho2rho1,T2T1 = fl.normalShockRatio(gas,beta=beta)
+    a2=gas.a*np.sqrt(T2T1)
+    Vlim=(2*gas.H)**0.5
+    Vr_0=gas.Ma*gas.a*np.cos(beta)/Vlim
+    Vw_0=-Mn2*a2/Vlim
 
     # trigger event to end ode integration
     def event(w, y):
@@ -160,7 +125,7 @@ def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
     
 
     #shock relation used
-    def _normalShock(beta: float,gas: object) -> tuple:
+    def _normalShock(beta: float,gas: fl.Gas):
 
         # if beta <0: 
         #     raise RuntimeError("beta must be positive")
@@ -333,7 +298,7 @@ def calcCLCdCone(deltaC: float, alpha:float , phi:np.ndarray, cp: np.ndarray)->t
 if __name__ == "__main__":
 
     # dati gas
-    Ma = 10
+    Ma = 1.7
     dict_air={
     "Ma": Ma,
     "gamma": 1.4,
