@@ -5,3 +5,6 @@
 - implement isentropic and
 - beta cone calculation of the script
 - package index
+
+## NOTE
+- the web code 3DconeSupersonic give the strong shock solution for Ma<1.5
