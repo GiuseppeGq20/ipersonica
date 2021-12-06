@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.optimize import root_scalar
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -75,17 +75,17 @@ def obliqueShock(theta: float,gas: Gas)-> float:
     
     return beta.root
 
-
-def normalShockRatio(gas: Gas):
-    Ma2 = np.sqrt((gas.Ma**2 + gas.n) / ((gas.n + 2)*(gas.Ma**2) -1 ))
-    p2p1= (1 + gas.gamma*(gas.Ma**2)) / (1 + gas.gamma*(Ma2**2))
-    rho2rho1=(1/p2p1)* ((gas.Ma/Ma2)**2)
-    T2T1=( 1 + (gas.Ma**2)/gas.n) / ( 1 + (Ma2**2)/gas.n)
+def normalShockRatio(gas: Gas,beta=np.pi/2):
+    Ma=gas.Ma*np.sin(beta)
+    Ma2 = np.sqrt((Ma**2 + gas.n) / ((gas.n + 2)*(Ma**2) -1 ))
+    p2p1= (1 + gas.gamma*(Ma**2)) / (1 + gas.gamma*(Ma2**2))
+    rho2rho1=(1/p2p1)* ((Ma/Ma2)**2)
+    T2T1=( 1 + (Ma**2)/gas.n) / ( 1 + (Ma2**2)/gas.n)
     
     return Ma2,p2p1,rho2rho1,T2T1
 
-def normalShock(gas: Gas):
-    Ma2,p2p1,rho2rho1,T2T1 = normalShockRatio(gas)
+def normalShock(gas: Gas,beta=np.pi/2):
+    Ma2,p2p1,rho2rho1,T2T1 = normalShockRatio(gas,beta=beta)
     dict2={
         "Ma": Ma2,
         "gamma": gas.gamma,
@@ -96,7 +96,6 @@ def normalShock(gas: Gas):
         "n" : gas.n
     }
     return Gas(dict2)
-
 
 if __name__=="__main__":
 
