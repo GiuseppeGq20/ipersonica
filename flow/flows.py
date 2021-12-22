@@ -32,8 +32,6 @@ class Gas:
         self.a= (self.gamma*self.R*self.T)**0.5 #m/s
         self.H= self.cp*self.T + 0.5*((self.Ma*self.a)**2)
 
-
-
 def isentropicFlow():
     pass
 

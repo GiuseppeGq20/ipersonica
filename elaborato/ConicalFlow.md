@@ -24,7 +24,7 @@ Per risolvere il problema si puó adottare il seguente schema risolutivo:
    e(\beta)= \omega_{fin}(\beta)-\delta_c
    $$
    l'angolo $\beta$ cosí ottenuto é l'angolo dell'onda d'urto conica.
-   Nel codice questo é implementato con un metodo delle secanti nella funzione `betaCone()`, al variare dell'inizializzazione dell' algoritmo si possono ottenere la soluzione forte o debole dell'urto.
+   Nel codice questo é implementato con un metodo delle secanti nella funzione `betaCone()`, al variare dell'inizializzazione dell' algoritmo si possono ottenere la soluzione forte o debole dell'urto, tuttavia il metodo non garantisce convergenza per ogni valore di tentativo per l'inizializzazione del metodo delle secanti.
 
    
 
@@ -35,7 +35,7 @@ Si può impostare la seguente strategia per risolvere questo problema:
 
 - definire la funzione $f(Ma_\infty , \beta) = M_2 -1$
 - trovare l' angolo $\beta$ per cui $f=0$ 
-- Integrare le equazioni di Taylor Maccoll, noti $\beta$ e $Ma_\infty$ , da cui si può ottenere $\delta_{c,max}$
+- Integrare le equazioni di Taylor-Maccoll, noti $\beta$ e $Ma_\infty$ , da cui si può ottenere $\delta_{c,max}$
 
 ## calcolo coefficienti aerodinamici
 
@@ -75,8 +75,4 @@ $$
   Il calcolo dei coefficienti aerodinamici é implementato nella funzione `calcClCdCone()`. Gli integrali che compaiono nell eqs. $\ref{Fx}$ e $\ref{Fy}$ sono calcolati attraverso una regola trapezoidale. 
 
 
-
-## NOTE da rimuovere
-
- Analitycal solution of the Taylor Maccol equations [@TaylorMaccollAnalytic]
 

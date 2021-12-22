@@ -4,4 +4,3 @@
 - test for Gas Struct
 - implement isentropic and
 - beta cone calculation of the script
-- package index

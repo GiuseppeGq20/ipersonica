@@ -1,10 +1,9 @@
 # %%
-import numpy as np
 import matplotlib.pyplot as plt
-import flow.flows as fl
-from scipy.integrate import solve_ivp , trapezoid
+import numpy as np
+from scipy.integrate import solve_ivp, trapezoid
 from scipy.optimize import root_scalar
-
+import flow.flows as fl
 
 
 def _TaylorMaccoll(w, y, gas):
@@ -34,7 +33,7 @@ def solveTaylorMaccoll(beta: float, gas: fl.Gas):
     if beta <0: 
         raise RuntimeError("beta must be positive")
 
-    # calc shock relation
+    # calc shock relation needed
     Mn2,p2p1,rho2rho1,T2T1 = fl.normalShockRatio(gas,beta=beta)
     a2=gas.a*np.sqrt(T2T1)
     Vlim=(2*gas.H)**0.5
