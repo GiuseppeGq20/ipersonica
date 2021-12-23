@@ -1,0 +1,2 @@
+%config environment
+addpath("fcn")
