@@ -98,30 +98,4 @@ ylabel("C_p")
 legend
 grid on
 
-%% helper functions
-
-function [Cl,Cd]=CalcClCd(alpha,thetaDorso,thetaVentre,lDorso,lVentre,cpDorso,cpVentre)
-%% calcola Cl e cd profilo 2D
-%input:
-% alpha: angolo d'attacco
-% thetaDorso: angoli geometrici pannelli dorso
-% thetaVentre: angoli geometrici pannelli ventre
-% cpDorso: distribuzione cp dorso
-% cpVentre: distribuzione cp ventre
-%output:
-% [Cl,Cd]: coefficienti di portanza e resistenza
-
-Cx= - cpDorso.*lDorso.*cos(thetaDorso + pi/2) - cpVentre.*lVentre.*cos(thetaVentre + pi/2);
-Cx=sum(Cx,'omitnan');
-
-Cy= - cpDorso.*lDorso.*sin(thetaDorso + pi/2) + cpVentre.*lVentre.*sin(thetaVentre + pi/2);
-Cy=sum(Cy,'omitnan');
-
-Cd= Cx*cos(alpha) + Cy*sin(alpha);
-Cl=-Cx*sin(alpha) + Cy*cos(alpha);
-end
-
-
-
-
 
