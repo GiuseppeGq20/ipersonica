@@ -18,7 +18,7 @@ def main():
 	""" Direct Simulation Monte Carlo """
 	
 	# Simulation parameters
-	uw              = 0.2       # lower wall velocity
+	uw              = 1       # lower wall velocity
 	Tw              = 1         # wall temperature
 	n0              = 0.001     # density
 	N               = 50000     # number of sampling particles
