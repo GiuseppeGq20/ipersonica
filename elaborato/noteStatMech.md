@@ -102,7 +102,7 @@ the final expression for the so called Maxwell distribution is
 $$
 f(v)= \frac 4 {\sqrt \pi} \left(\frac m {2K_BT}\right)^{3/2} e^{\frac{m (v^2)}{2K_BT}}
 $$
->we can see that $G$ and $f$ differs from a multiplicative factor of $\frac 4 {\sqrt \pi}$, and as one might expect for given the probability of finding a particle moving at speed $\mathbf v$ without jointly fixing its component is greater
+>we can see that $G$ and $f$ differs from a multiplicative factor of $\frac 4 {\sqrt \pi}$, and as one might expect the probability of finding a particle moving at speed $\mathbf v$ without jointly fixing its component is greater
 
 >The Maxwell distribution solve the boltzmann equation for a system of particles:
 >    - in equilibrium
