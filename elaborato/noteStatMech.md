@@ -1,5 +1,7 @@
-# Minimal Notes on statistical mechanics
-
+---
+title: "Minimal Notes on statistical mechanics"  
+---
+# Statistical mechanics
 ## A statistical definition of temperature
 If a system that is capable of exchanging energy is in *thermal equilibrium* 
 with its environment then * it will appear to choose a macroscopic configuration
@@ -16,7 +18,7 @@ $$
     \frac{1}{k_b T}= \frac{d \ln \Omega}{d E}
 $$
 
-## ensemlbes
+## ensembles
 There are three main ensembles that tends to be used in thermal physics:
 1. **Microcanonical ensemble** : an ensemble of systems that have each the same 
 fixed energy
@@ -103,10 +105,10 @@ the correlation terms in the variance matrix are equal to zero.
 ### speed distribution
 Now we ask what is the distribution function $f$ of molecules ,in thermal equilibrium, 
 moving between speed $\mathbf v$ and $\mathbf v + d\mathbf v$, (now we are not 
-fixing each velocity comoponent as in the previous section when discussing about 
+fixing each velocity component as in the previous section when discussing about 
 the $G$ distribution function).
-The probability of finding a particle in such state is proportional to a Boltmann
-fatctor (carachterized by the kinetic energy of the particle $\frac 1 2 m v^2$) 
+The probability of finding a particle in such state is proportional to a Boltzmann
+factor (characterized by the kinetic energy of the particle $\frac 1 2 m v^2$) 
 times the velocity space volume associated with particles at speed between
 $\mathbf v$ and $\mathbf v + d\mathbf v$. this correspond to a spherical shell 
 of thickness $dv$, $4\pi v^2 dv$.  
@@ -130,27 +132,25 @@ $$
 and as one might expect the probability of finding a particle moving at speed 
 $\mathbf v$ without jointly fixing its component is greater
 
->The Maxwell distribution solve the boltzmann equation for a system of particles:
+>The Maxwell distribution solve the Boltzmann equation for a system of particles:
 >    - in equilibrium
 >    - uniformly distributed in space, 
 >    - with a fixed or null convective velocity
->    - non interacting particle (i.e. no coulumb forces)
+>    - non interacting particle (i.e. no Coulomb forces)
 >
 >This is also said to be a *hard sphere* approximation of the system of particles
 
-### carachteristic velocities of the Maxwell distribution
+### characteristic velocities of the Maxwell distribution
 - mean velocity $<v> = \sqrt{\frac{8K_BT}{\pi m}}$
 - mean squared velocity $<v^2>= \frac {3K_BT}{m}$, this lead to the conclusion 
 that the mean kinetic energy of a particle is $<E_k>=\frac 3 2 K_BT$
 - most likely velocity (wich is the velocity at wich the $f$ distribution reach 
-is maximum value) $v_{max} = \sqrt{\frac{2K_BT}m}$
+is maximum value)  $v_{max} = \sqrt{\frac{2K_BT}m}$
 
 ## Mean free path
 
 
-
-## Entropy
----
+# Entropy
 ## thermodynamic definition of entropy
 entropy is defined as:
 $$
@@ -183,7 +183,7 @@ $$
     S=k_B\ln(\Omega)
 $$
 >this is a very profound equation, it express the Entropy of a system in one
-possible Macrostate carachterized by $\Omega$ possible microstate.
+possible Macrostate characterized by $\Omega$ possible microstate.
 
 However this isn't the most general case, since we are not accounting the fact
 that some system can have more than one possible macrostate (microstate subgroups
@@ -191,7 +191,7 @@ that we can address by a macroscopic quantity  or condition of the system) and
 for each macrostate there are $\Omega_i$ microstate, which often are difficult
 to measure.  
 So in most cases the Boltzmann formula for the entropy would read:
-$$ 
+$$
     S_{tot}=k_B\ln(N)
 $$
 where $N$ is the number of total microstates. This formula isn't of practical use
@@ -208,7 +208,7 @@ microstate Entropy associated with each macrostate:
 $$
 S_{micro}=<S_{i}>=\sum_i P_iS_i
 $$
-Where $S_i$ is given by Boltzmnann formula $S_i=k_B\ln\relax n_i$.  
+Where $S_i$ is given by Boltzmann formula $S_i=k_B\ln n_i$.  
 Each macrostate has $n_i$ microstate and $\sum_i n_i=N $, the toatl number N of 
 microstate of the system.
 So the probability of finding the system in the i-th macrostate is:
@@ -223,11 +223,11 @@ S&= S_{tot} - S_{micro}\\
 S&=k_B\left(\ln(N)-\sum_i P_i \ln(n_i)\right)\\
 S&=k_B\left(\sum_i P_i(\ln(N) - \ln(n_i)) \right)\\
 S&=-k_B\sum_i P_i \ln\left(\frac {n_i} N\right)\\
-S&=-k_B\sum_i P_i \ln\relax P_i
+S&=-k_B\sum_i P_i \ln P_i
 \end{align*}
 $$
 
-## NOTE
+# NOTE
 ### **Thermal equilibrium**
 - Two or more systems are said to be in thermal equilibrium if their energy
 content and temperature are no longer changing with times.  
