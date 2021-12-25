@@ -121,6 +121,68 @@ $$
 
 
 
+## Entropy
+---
+## thermodynamic definition of entropy
+entropy is defined as:
+$$
+dS = \frac {dQ_{rev}}{T}
+$$
+and it is a function of state.
+>note: since **entropy** is a function of state, its evaluation doesn't depend on the particular trasformation to which the system is subjected to. Hence even for an irreversible process we can evaluate the change in entropy of the process from state **A** to state **B** by evaluating a the change in entropy of a reversible trasformation of the same system that has the same intial and final states **A** and **B**.
+
+### another statement of the II law using the entropy
+For a thermally isolated system  the change in entropy is always greater or equal to zero.
+$$ dS \geq 0 $$
+
+## Statistical definition of entropy
+### Boltzmann definition
+if we assume that the statistical definition of temeperature is valid then:
+$$
+    \frac{1}{k_b T}= \frac{d \ln \Omega}{d E}
+$$
+and also, from the first law:
+$$
+\frac 1 T = \left(\frac {\partial S}{\partial U}\right)_V
+$$
+by comparing these two equation we get:
+$$
+    S=k_B\ln(\Omega)
+$$
+>this is a very profound equation, it express the Entropy of a system in one possible Macrostate carachterized by $\Omega$ possible microstate.
+
+However this isn't the most general case, since we are not accounting the fact that some system can have more than one possible macrostate (microstate subgroups that we can address by a macroscopic quantity  or condition of the system) and for each macrostate there are $\Omega_i$ microstate, which often are difficult to measure.  
+So in most cases the Boltzmann formula for the entropy would read:
+$$ 
+    S_{tot}=k_B\ln(N)
+$$
+where $N$ is the number of total microstates. This formula isn't of practical use due to the difficulties of counting all the microstates.
+
+### Gibbs formula
+To overcome this difficulties of using the Boltzmann entropy relation we can use the Gibbs formula that gives the entropy that we can measure S (of the macrostates).
+we begin by stating that the total entropy is:
+$$ S_{tot}= S + S_{micro}$$
+where $S$ is the entropy that we can actually measure and $S_{micro}$ is the entropy associated with the microstates. It is the expected value of the variuos microstate Entropy associated with each macrostate:
+$$
+S_{micro}=<S_{i}>=\sum_i P_iS_i
+$$
+Where $S_i$ is given by Boltzmnann formula $S_i=k_B\ln\relax n_i$.  
+Each macrostate has $n_i$ microstate and $\sum_i n_i=N $, the toatl number N of microstate of the system.
+So the probability of finding the system in the i-th macrostate is:
+$$
+P_i= \frac {n_i} N
+$$
+Now we can derive the Gibbs formula, that express the entropy $S$ in terms of the probability $P_i$.
+$$
+\begin{align*}
+S&= S_{tot} - S_{micro}\\
+S&=k_B\left(\ln(N)-\sum_i P_i \ln(n_i)\right)\\
+S&=k_B\left(\sum_i P_i(\ln(N) - \ln(n_i)) \right)\\
+S&=-k_B\sum_i P_i \ln\left(\frac {n_i} N\right)\\
+S&=-k_B\sum_i P_i \ln\relax P_i
+\end{align*}
+$$
+
 ## NOTE
 ### **Thermal equilibrium**
 - Two or more systems are said to be in thermal equilibrium if their energy content and temperature are no longer changing with times.  
