@@ -6,5 +6,6 @@
 - beta cone calculation of the script
 - package index
 
+- esercizio cap 7 piccoli disturbi: implementalo con script octave
 ## NOTE
 - the web code 3DconeSupersonic give the strong shock solution for Ma<1.5
