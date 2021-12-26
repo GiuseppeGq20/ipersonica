@@ -170,8 +170,28 @@ temperature
 
 ## Mean free path
 Consider a first class of molecules wich moves at velocity $\mathbf v$ and
-consider
-
+consider only collision with a second class of molecules which move at velocity 
+$\mathbf u$. In a frame moving at velocity $\mathbf u$, this second class of molecules are stationary and offer a total cross-section of $n\sigma f(\mathbf u)d\mathbf u$, 
+where $f(\mathbf u)=g(u_x)g(u_y)g(u_z)$ is a Maxwell-Boltzmann distribution for the 
+vector $\mathbf u=(u_x,u_y,u_z)$. In unit time, the total volume swept out by these targets relative to the first class of molecules (which in this frame move at velocity 
+$ \mathbf v - \mathbf u $) is $ | \mathbf v - \mathbf u|n\sigma f(\mathbf u)d\mathbf u$.  
+The number of encounters per second is obtained by multipliyng this volume by the 
+probability of finding one of the first class of molecules in unit volume,
+giving $ | \mathbf v - \mathbf u|n\sigma f(\mathbf u)d\mathbf u f(\mathbf v)d\mathbf v$.
+The collision rate $R$ is therefore obtained by integrating over all $\mathbf u$
+and $\mathbf v$ giving:
+$$ 
+R= n \sigma \int\int | \mathbf v - \mathbf u|n\sigma f(\mathbf u)d\mathbf u f(\mathbf v)d\mathbf v
+$$
+which writing $x=\frac {\mathbf v - \mathbf u}{\sqrt 2}$ and $y=\frac {\mathbf v + \mathbf u}{\sqrt 2}$ can be trasformed into
+$$ 
+R= n \sigma \sqrt 2 \int |x|n\sigma f(\mathbf x)dx \int f(\mathbf y)d\mathbf y 
+$$
+where the first integral yields $<v>$ and  the second integral is unity. Hence
+$R=n\sigma\sqrt 2 <v>$ and the mean free path is:
+$$
+\lambda = \frac {<v>} R = \frac 1 {n \sigma \sqrt 2} 
+$$
 # Entropy
 ## thermodynamic definition of entropy
 entropy is defined as:
