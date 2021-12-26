@@ -147,8 +147,30 @@ that the mean kinetic energy of a particle is $<E_k>=\frac 3 2 K_BT$
 - most likely velocity (wich is the velocity at wich the $f$ distribution reach 
 is maximum value)  $v_{max} = \sqrt{\frac{2K_BT}m}$
 
-## Mean free path
+## Mean Collision time
+the events consistiong of particle colliding into each other distribute as an exponential random variate of parameter $n\sigma v$ where $\sigma$ is the collisional cross section.Thus the mean collision time is:
+$$
+\tau= \frac 1 {n\sigma v}
+$$
+### collisional cross section
+We consider particles subjected to a **hard sphere potential** 
+$$
+V(R)=
+\begin{cases}
+0 \qquad R >b\\
+\infty \qquad R\leq b
+\end{cases}
+$$
+wich implies that two molecule collide if their distance is less than  the impact 
+parameter $b$.  
+Thus molecules can be tought of moving from one collision to another inside an 
+immaginary tube of cross-section $\sigma = \pi b^2$.
+>the hard sphere potential approximation is valid for not too low, nor to high 
+temperature
 
+## Mean free path
+Consider a first class of molecules wich moves at velocity $\mathbf v$ and
+consider
 
 # Entropy
 ## thermodynamic definition of entropy
