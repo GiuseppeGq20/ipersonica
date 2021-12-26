@@ -148,10 +148,38 @@ that the mean kinetic energy of a particle is $<E_k>=\frac 3 2 K_BT$
 is maximum value)  $v_{max} = \sqrt{\frac{2K_BT}m}$
 
 ## Mean Collision time
-the events consistiong of particle colliding into each other distribute as an exponential random variate of parameter $n\sigma v$ where $\sigma$ is the collisional cross section.Thus the mean collision time is:
+the events consistiong of particle colliding into each other distribute as an 
+exponential random variate of parameter $n\sigma v$ where $\sigma$ is the 
+collisional cross section.Thus the mean collision time is:
 $$
 \tau= \frac 1 {n\sigma v}
 $$
+### proof with scattering theory
+Let us define $P(t)$ as follows:
+$$ P(t)= \text{the probability of not colliding up to time}\quad t $$
+In a time $dt$ a molecule will sweep out a volume $\sigma dt$. With $n$ molecules
+per unit volume, the probability of a collision in time $dt$ is therefore $n\sigma v dt$.  Where $v $ is the relative velocity between molecules.
+Now we can derive the probability of not colliding up to time $t$. We begin by
+deriving $P(t + dt)$ wich is the probability of not colliding up to time $t+dt$
+$$
+P(t+dt)=P(t)P(dt)=P(t)(1-n\sigma v dt)\\
+$$ 
+but also
+$$
+P(t+dt)=P(t) + \frac{dP}{dt}dt
+$$
+this leads us to the following differential equation, with initial condition $P(0)=1$,
+$$ \frac{dP}{dt}=-Pn\sigma v$$
+and thus:
+$$ P(t)= e^{-n\sigma v t}$$
+Now the probability of surviving without collision up to time $t$ but then colliding
+in the next dt is:
+$$ P(t)= e^{-n\sigma v t}n\sigma v dt$$
+This define the collision time, wich distribute as an exponential random variate.
+We can calculate:
+- mean collisional time: $\tau=\frac 1 {n\sigma v}$
+- root mean square collisional time: 
+$$\tau_{rms}=\sqrt{<t^2>}=(Var(t)+\tau^2)^{1/2}=\frac {\sqrt 2}{n\sigma v}$$
 ### collisional cross section
 We consider particles subjected to a **hard sphere potential** 
 $$
@@ -171,9 +199,12 @@ temperature
 ## Mean free path
 Consider a first class of molecules wich moves at velocity $\mathbf v$ and
 consider only collision with a second class of molecules which move at velocity 
-$\mathbf u$. In a frame moving at velocity $\mathbf u$, this second class of molecules are stationary and offer a total cross-section of $n\sigma f(\mathbf u)d\mathbf u$, 
-where $f(\mathbf u)=g(u_x)g(u_y)g(u_z)$ is a Maxwell-Boltzmann distribution for the 
-vector $\mathbf u=(u_x,u_y,u_z)$. In unit time, the total volume swept out by these targets relative to the first class of molecules (which in this frame move at velocity 
+$\mathbf u$. In a frame moving at velocity $\mathbf u$, this second class of 
+molecules are stationary and offer a total cross-section of 
+$n\sigma f(\mathbf u)d\mathbf u$, where $f(\mathbf u)=g(u_x)g(u_y)g(u_z)$ is 
+a Maxwell-Boltzmann distribution for the vector $\mathbf u=(u_x,u_y,u_z)$. 
+In unit time, the total volume swept out by these targets relative to the 
+first class of molecules (which in this frame move at velocity 
 $ \mathbf v - \mathbf u $) is $ | \mathbf v - \mathbf u|n\sigma f(\mathbf u)d\mathbf u$.  
 The number of encounters per second is obtained by multipliyng this volume by the 
 probability of finding one of the first class of molecules in unit volume,
@@ -183,7 +214,9 @@ and $\mathbf v$ giving:
 $$ 
 R= n \sigma \int\int | \mathbf v - \mathbf u|n\sigma f(\mathbf u)d\mathbf u f(\mathbf v)d\mathbf v
 $$
-which writing $x=\frac {\mathbf v - \mathbf u}{\sqrt 2}$ and $y=\frac {\mathbf v + \mathbf u}{\sqrt 2}$ can be trasformed into
+which writing 
+$x=\frac {\mathbf v - \mathbf u}{\sqrt 2}$ and $y=\frac {\mathbf v + \mathbf u}{\sqrt 2}$ 
+can be trasformed into
 $$ 
 R= n \sigma \sqrt 2 \int |x|n\sigma f(\mathbf x)dx \int f(\mathbf y)d\mathbf y 
 $$
