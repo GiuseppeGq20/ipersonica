@@ -2,7 +2,12 @@
 title: "small perturbance airfoil"  
 author: "Giuseppe Giaquinto"  
 ---
-
+# Mach indipendence
+in the limit of hypersonic flow  and small perturbance the Mach number past a shock wave doesn't depend on the upstream Mach number,infact:
+$$
+M_2\rightarrow \frac 1 {n+1} \frac 1 { (\frac {n+1}n -1)^2} \frac 1 {\theta^2}\\
+M_1 \rightarrow \infty
+$$
 # Analisys the flow field of an airfoil in hypersonic regime in the limits of the small perturbance theory
 
 ## Equation of motion
@@ -70,3 +75,5 @@ $$
 ### numerical scheme
 
 ## Results
+
+# Hayes analogy

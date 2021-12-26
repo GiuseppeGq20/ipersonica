@@ -18,7 +18,7 @@ $$
     \frac{1}{k_b T}= \frac{d \ln \Omega}{d E}
 $$
 
-## ensembles
+## Ensembles
 There are three main ensembles that tends to be used in thermal physics:
 1. **Microcanonical ensemble** : an ensemble of systems that have each the same 
 fixed energy
