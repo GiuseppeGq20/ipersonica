@@ -10,7 +10,7 @@ for a 2D airfoil moving at $Ma>>1$ in the limit of small perturbance theory we
 can express the equation of motion as:
 $$
 \begin{align*}  
-&\frac{\partial \rho}{\partial x} +\frac{\partial pv}{\partial y}=0\\
+&\frac{\partial \rho}{\partial x} +\frac{\partial \rho v}{\partial y}=0\\
 &\frac{\partial v}{\partial x} + v\frac{\partial v}{\partial y} =- \frac{1}{\rho} 
 \frac{\partial p}{\partial y}\\
 &\frac{\partial}{\partial x} \frac p {\rho^\gamma} + v \frac{\partial}{\partial y}
@@ -49,7 +49,7 @@ $$
 finally we can rewrite the equation of motion:
 $$
 \begin{align*}
-&\frac{\partial \rho}{\partial x} +\frac{\partial pv}{\partial y}=0\\
+&\frac{\partial \rho}{\partial x} +\frac{\partial \rho v}{\partial y}=0\\
 &\frac{\partial v}{\partial x} + \frac {\partial}{\partial y}\left( \frac {v^2} 2 
 + \frac \gamma {\gamma - 1}\frac p \rho \right)=0\\
 \end{align*}
