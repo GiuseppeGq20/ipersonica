@@ -158,7 +158,8 @@ $$
 Let us define $P(t)$ as follows:
 $$ P(t)= \text{the probability of not colliding up to time}\quad t $$
 In a time $dt$ a molecule will sweep out a volume $\sigma dt$. With $n$ molecules
-per unit volume, the probability of a collision in time $dt$ is therefore $n\sigma v dt$.  Where $v $ is the relative velocity between molecules.
+per unit volume, the probability of a collision in time $dt$ is therefore $n\sigma v dt$.
+Where $v $ is the relative velocity between molecules.
 Now we can derive the probability of not colliding up to time $t$. We begin by
 deriving $P(t + dt)$ wich is the probability of not colliding up to time $t+dt$
 $$
