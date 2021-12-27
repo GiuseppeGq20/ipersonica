@@ -23,7 +23,7 @@ Nel codice la geometria del profilo è discretizzata in un numero finito di punt
 
 - $P_i=(x_i,y_i)$ 
 - $l_i= \sqrt{(x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2}$
-- $\theta_{i_{geom}}= \atan(\frac{y_{i+1} - y_i}{x_{i+1} - x_i})$
+- $\theta_{i_{geom}}= \arctan(\frac{y_{i+1} - y_i}{x_{i+1} - x_i})$
 
 Conviene infittire il numero di punti in prossimità dei bordo di attacco e di uscita dove è maggiore la $\frac{dy} {dx}$ . Nel codice matlab è stata usata una distribuzione di punti alla Cebicev implementata nel seguente modo
 
@@ -34,7 +34,7 @@ x=(1+cos(angle))/2
 
  Sul bordo d'attacco l'angolo $\theta_{geom}$  sul dorso calcolato analiticamente vale:
 $$
-\theta_{geom}= \atan( \frac{0.5}{\sqrt{R^2 - 0.25}}) \simeq 17°
+\theta_{geom}= \arctan( \frac{0.5}{\sqrt{R^2 - 0.25}}) \simeq 17°
 $$
 usando uno stencil di punti come prima citato il primo tratto della spezzata sul bordo d'attacco ha un angolo $\theta_{1_{geom}} \simeq 17°$
 
@@ -55,9 +55,9 @@ cpDorsoN=2*sin( thetaDorso(thetaDorso>0)).^2;
 
 ### Metodo di Newton-Buseman
 
-per tener conto della curvatura del profilo nel calcolo del coefficiente di pressione con il metodo di Newton, Buseman ha proposto la correzione di eq. $\ref{Bus}$ , dove vale il segno $+$ per corpi concavi e $-$ per corpi convessi.
+per tener conto della curvatura del profilo nel calcolo del coefficiente di pressione con il metodo di Newton, Buseman ha proposto la correzione di eq. (1) , dove vale il segno $+$ per corpi concavi e $-$ per corpi convessi.
 $$
-c_{p_B}=c_{p_N} \pm \frac 2 R \int_0^y \cos(\theta) dy \label{Bus}\tag{1}
+c_{p_B}=c_{p_N} \pm \frac 2 R \int_0^y \cos(\theta) dy \tag{1}
 $$
 per $\theta << 1$ ,  cioè per corpi sottili con curvatura non grande, $\cos(\theta)\simeq 1$ e la formula di prima può essere approssimata come:
 $$
@@ -70,9 +70,9 @@ Inoltre dato che le ipotesi dell' interazione fluido struttura sono le stesse di
 Secondo tale teoria il $c_p$ nel generico punto  $(x,y)$ del corpo in compressione ( $\theta_{geom} \pm \alpha > 0$)   è quello a valle di un onda d' urto di un cuneo avente un angolo $\delta_{cuneo} = atan( \frac {dy} {dx})$  posto nelle stesse condizioni asintotiche del corpo originario.  Il metodo ha validità se per ogni punto del corpo $\delta_{cuneo} \leq \delta_{lim}$  ed il bordo d' attacco è a spigolo vivo.
 Per i punti del corpo in espansione ($\theta_{geom} \pm \alpha \leq 0$) si considera invece un espansione alla Prandtl e Meyer.
 
-Nel limite della teoria dei piccoli disturbi si ha che il $c_p$ sia sul dorso che sul ventre del profilo è funzione del parametro di similitudine $K=M_\infty \theta$  (dove $\theta$ è l'angolo di deviazione della corrente, $\theta= \theta_{geom}\pm\alpha$) secondo la eq. $\ref{conoTangente}$
+Nel limite della teoria dei piccoli disturbi si ha che il $c_p$ sia sul dorso che sul ventre del profilo è funzione del parametro di similitudine $K=M_\infty \theta$  (dove $\theta$ è l'angolo di deviazione della corrente, $\theta= \theta_{geom}\pm\alpha$) secondo la eq. (2)
 $$
-c_p= \frac {2} {M_\infty^2} \big[K + \frac{n+1}{2n}K^2 \big] + \mathcal O(K^3) \label{conoTangente} \tag 2
+c_p= \frac {2} {M_\infty^2} \big[K + \frac{n+1}{2n}K^2 \big] + \mathcal O(K^3)  \tag 2
 $$
 
 Tuttavia per il profilo dell F-104 quest' approssimazione non è applicabile in quanto:
@@ -131,11 +131,4 @@ nel codice il calcolo dei coefficienti aerodinamici è implementato attraverso l
 $$
 C_{F_x}= \sum _{dorso} c_{p_i} \Delta l_i \cos(\theta + \frac \pi 2) - \sum_{ventre} c_{p_i} \Delta l_i\cos(\theta + \frac \pi 2)
 $$
-nel codice matlab:
-
-```matlab
-Cx= - cpDorso.*deltalDorso.*cos(thetaDorso + pi/2) - cpVentre.*deltalVentre.*cos(thetaVentre + pi/2);
-Cx=sum(Cx,'omitnan');
-
-```
 
