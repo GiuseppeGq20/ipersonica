@@ -2,7 +2,7 @@
 
 ## 1. Profilo F-104
 
-Il profilo normalizzato dello *starfighter* è descritto dalla seguente curva cartesiana:
+Il profilo normalizzato dello *starfighter* è descritto dalla seguente curva cartesiana:  
 $$
 \begin{align}
 y&=\pm \big[- \big(R - \frac{\tau}{2}\big) + \sqrt{R^2 - (x-0.5)^2}\big]\\
@@ -10,7 +10,7 @@ R&=\big(\frac{1}{\tau} + \tau \big)\frac c 4 \simeq 1.7 \\
 \tau&=0.15\\
 c&=1
 \end{align}
-$$
+$$  
 
 Data la geometria del profilo è possibile applicare le seguenti teorie approssimate, dato l' elevato numero di Mach e la piccola curvatura del profilo:
 
@@ -19,7 +19,7 @@ Data la geometria del profilo è possibile applicare le seguenti teorie approssi
 * cono-tangente 
 * urto-espansione
 
-Nel codice la geometria del profilo è discretizzata in un numero finito di punti $(x,y)$ . In tal modo é possibile approssimare il profilo con una linea spezzata chiusa ed ogni tratto $i-esimo$  é caratterizzato dalle seguenti caratteristiche geometriche:
+Nel codice la geometria del profilo è discretizzata in un numero finito di punti $(x,y)$. In tal modo é possibile approssimare il profilo con una linea spezzata chiusa ed ogni tratto $i-esimo$  é caratterizzato dalle seguenti caratteristiche geometriche:
 
 - $P_i=(x_i,y_i)$ 
 - $l_i= \sqrt{(x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2}$
@@ -30,9 +30,9 @@ Conviene infittire il numero di punti in prossimità dei bordo di attacco e di u
 ```matlab
 angle = linspace(pi,0,100);
 x=(1+cos(angle))/2
-```
+```  
 
- Sul bordo d'attacco l'angolo $\theta_{geom}$  sul dorso calcolato analiticamente vale:
+Sul bordo d'attacco l'angolo $\theta_{geom}$  sul dorso calcolato analiticamente vale:
 $$
 \theta_{geom}= \arctan( \frac{0.5}{\sqrt{R^2 - 0.25}}) \simeq 17°
 $$
@@ -121,12 +121,14 @@ c_{F_y}&= \int_\gamma c_p \boldsymbol n\cdot \boldsymbol j dl = \int_\gamma c_p 
 \end{align}
 $$
 da cui si possono calcolare i coefficienti di portanza e resistenza
+
 $$
 \begin{align}
 c_d&= c_{F_x}\cos(\alpha) + c_{F_y}\sin(\alpha) \\
 c_l&= -c_{F_x}\sin(\alpha) + c_{F_y}\cos(\alpha)\\
 \end{align}
 $$
+
 nel codice il calcolo dei coefficienti aerodinamici è implementato attraverso la routine <code>CalcClCd()</code> , gli integrali per il calcolo di $C_{F_x}$ e $C_{F_y}$ sono approssimati attraverso una semplice formula di quadratura.  Per esempio per il calcolo di $C_{F_x}$ si ha:
 $$
 C_{F_x}= \sum _{dorso} c_{p_i} \Delta l_i \cos(\theta + \frac \pi 2) - \sum_{ventre} c_{p_i} \Delta l_i\cos(\theta + \frac \pi 2)
