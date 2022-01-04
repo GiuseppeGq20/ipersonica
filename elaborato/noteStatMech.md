@@ -321,7 +321,7 @@ $$
 S_{micro}=\langle S_{i}\rangle=\sum_i P_iS_i
 $$
 Where $S_i$ is given by Boltzmann formula $S_i=k_B\ln n_i$.  
-Each macrostate has $n_i$ microstate and $\sum_i n_i=N $, the toatl number N of 
+Each macrostate has $n_i$ microstate and $\sum_i n_i=N$, the toatl number N of 
 microstate of the system.
 So the probability of finding the system in the i-th macrostate is:
 $$
