@@ -111,8 +111,9 @@ p\frac{\partial \nu}{\partial y}\\
 \frac \nu \gamma \frac{\partial p}{\partial y}\\
 & \nu \frac{\partial p}{\partial y} = \frac \gamma {\gamma - 1}\frac{\partial p \nu}{\partial y}
 \end{aligned}
-$$  
-finally we can rewrite the equation of motion:  
+$$
+
+finally we can rewrite the equation of motion:
 
 $$
 \begin{aligned}
@@ -120,7 +121,7 @@ $$
 &\frac{\partial v}{\partial x} + \frac {\partial}{\partial y}\left( \frac {v^2} 2 
 + \frac \gamma {\gamma - 1}\frac p \rho \right)=0 \\
 \end{aligned}
-$$(1)
+$$ (1)
 
 > the fact that we could express this equation in the conservative form allows as
 > to more easily apply a finite volume scheme to integrate them.  
@@ -130,7 +131,7 @@ We can than obtain the $u$ component of the velocity via the Energy equation:
 $$
 u + V_\infty = 
 \sqrt{2\left(H_\infty- \frac \gamma {\gamma-1}Z\rho^{\gamma-1} \right) - v^2}
-$$  
+$$
 
 ### Boundary conditions
 

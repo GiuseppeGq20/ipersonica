@@ -12,13 +12,14 @@ EPS2=0.213
 
 #cinetica chimica
 #eq Tv, vibrazione azoto
-C1=7.21e-9
+C1=7.12e-4
 C2=1.91e6
 TAU=5.68e-2
 
 #eq alpha, dissociazione ossigeno
-mO2=2.6566962e-26
-k=1.38e-23
+mO2=32e3 #uma/Kmole
+mO2Kg=2.6566962e-26
+#k=1.38e-23
 R=8.3144
 # ref quantity ,pag.55 cap 3
 T_R=59273
@@ -30,7 +31,6 @@ V_R=1.06e-4
 KR=6.7e8
 T_VC=3364
 
-
 def rhs(x,y,k1):
     
     u,Tv,alpha,T,rho,p=y
@@ -38,28 +38,24 @@ def rhs(x,y,k1):
     # evolution vibrational Temperature of N2
     tv=(C1/p)*np.exp((C2/T)**(1/3))
     
-    dTvdx= (( np.exp(-(T_VC/T) + (T_VC/Tv)) - 1) / (1 - np.exp(-T_VC/T)) ) / (u*tv*TAU)
+    #dTvdx= (( np.exp(-(T_VC/T) + (T_VC/Tv)) - 1) / (1 - np.exp(-T_VC/T)) ) / (u*tv*TAU)
+    dTvdx= ( ( ((1 - np.exp(-T_VC/Tv) ) * np.exp(-T_VC/T)) / ((1 - np.exp(-T_VC/T))* np.exp(-T_VC/Tv))  ) -1 )/ (u*tv*TAU)
 
     # evolution of dissociation of O2
     K= (4/ (mO2*V_R) )* np.exp(- T_R/T)
 
-    dalphadx= (2*(1+alpha+DELTA)*(rho**2)/(mO2**2))*KR*( ((1-alpha-BETA)/(4*rho))*K*mO2 -alpha**2 )/u
+    dalphadx= ((2*(1+alpha+DELTA)*(rho**2)/(mO2**2))* KR * ( ((1-alpha-BETA)/(4*rho))*K*mO2 - alpha**2 ))/u
 
     # velocity
     dudx= - ((1 - (T*EPS1)/(1+alpha+DELTA))*dalphadx + EPS2*dTvdx ) / ( (EPS1 + 1 + alpha + DELTA)*T*((1/u) - (k1/p)) + u )
 
     # thermodynamic quantity
     drhodx= - (rho/u) *dudx
-    dpdx = - k*dudx
+    dpdx = - k1*dudx
     dTdx= T*(dudx/u - dalphadx/(1+alpha+DELTA) + dpdx/p)
     
     dydx=[dudx,dTvdx,dalphadx,dTdx,drhodx,dpdx]
     return dydx
-
-#TODO implement custom solver like in the book
-def solve():
-    # while 
-    pass
 
 def main():
     Ma= 6.4
@@ -79,13 +75,14 @@ def main():
     k1=air2.rho*u2
 
     y0=[u2,air.T,0,air2.T,air2.rho,air2.p]
-
+    t_eval=np.linspace(0,10000,100000)
     result=solve_ivp(
         lambda x,y: rhs(x,y,k1),
-       [0,1],
+       [0,10e4],
        y0,
-       method="BDF" 
+       method="RK45" 
     )
+    #TODO add evaluation of alpha equilibrium, pg 75 eq (9.8)
     return result
 
 if __name__=="__main__":
@@ -93,8 +90,17 @@ if __name__=="__main__":
     result=main()
     fig,ax=plt.subplots()
     labels=("u","Tv","alpha","T","rho","p")
+    # ax.set_xscale("log")
+
     for y in result.y:
         ax.loglog(result.t,y)
     ax.grid()
     ax.legend(labels)
+    plt.show()
+
+    plt.semilogx(result.t, result.y[-1])
+    plt.show()
+    plt.semilogx(result.t, result.y[4])
+    plt.show()
+    plt.semilogx(result.t, result.y[2])
     plt.show()
