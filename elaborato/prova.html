@@ -1,0 +1,101 @@
+<h1 id="evaluation-of-the-relaxation-layer-past-a-normal-shockwave-using-monti-napolitano-model">Evaluation of the Relaxation layer past a Normal shockWave using Monti-Napolitano model</h1>
+<p>Downstream a Normal shock wave, whom upstream mach number is in the hypersonic regime, the flow can reach hign enough temperatures that don’t allow us to consider the gas in thermodynamic equilibrium.<br />
+We have to consider the finite rate chemical processes that modify the thermofluidynamics properties oof the gas.<br />
+In particular we can address the importance of this chemical processes on the flow by evaluating the Damkoeler number: <span class="math display">$$
+Da=\frac{\text{transport time species}}{\text{chemical reaction time}}=\frac{t_m}{t_r}
+$$</span> and we can define 3 limiting cases: - <span class="math inline"><em>D</em><em>a</em> &lt;  &lt; 1</span>, frozen gas - <span class="math inline"><em>D</em><em>a</em> ≃ 1</span>, non equilibbrium - <span class="math inline"><em>D</em><em>a</em> &gt;  &gt; 1</span>, istantaneous equilibrium</p>
+<p>When considering the flow trough a shock wave, since it’s only a few mean free path thick, the gas can be considered to be in a frozen state, thus the Rankine-Hugonoit equations do apply.<br />
+At this boundary of the relaxation layer the thermo-fluidynamic properties of the gas are the ones prescribed by the Rankine-hugonoit equations for the frozen state of the gas. Then it evolves towards equilibrium.<br />
+When the gas is air in principle whe should consider: - exitation of vibrational state of <span class="math inline"><em>N</em><sub>2</sub></span> - dissociation of <span class="math inline"><em>O</em><sub>2</sub></span>, <span class="math inline"><em>N</em><sub>2</sub></span>, and subsequent formation o atomic oxigen, nitrogen and <span class="math inline"><em>N</em><em>O</em></span> - ionization</p>
+<h2 id="monti-napolitano-model">Monti-Napolitano model</h2>
+<p>In the present discussion the model is simplyfied by the assumption that <span class="math inline"><em>N</em><sub>2</sub></span> does not dissociate and no ionization is involved. This lead to the Monti-Napolitano model. It is thus valid for a range of temperature well above the vibrational temperature of <span class="math inline"><em>O</em><sub>2</sub></span>, <span class="math inline"><em>T</em><sub><em>v</em></sub> = 2279<em>K</em></span> and well below the dissotiation temperature of <span class="math inline"><em>N</em><sub>2</sub></span>, <span class="math inline"><em>T</em><sub><em>d</em></sub> = 113159<em>K</em></span>.<br />
+For the problem of the relaxation layer past a normal shock wave, this model is accurate enough for shock such that: <span class="math display">$$
+\frac {T_2}{T_1}&lt;15 \quad \frac{\rho_2}{\rho_1}&lt;10
+$$</span> and thus limits its applicability for a specific set of range of altitudes and Mach number. This model assume that:</p>
+<ul>
+<li>the vibrational,rotational and traslational degrees of freedom of <span class="math inline"><em>O</em>2</span>, the traslational, rotational degrees of freedom of <span class="math inline"><em>N</em>2</span>, the traslational d.o.f of <span class="math inline"><em>O</em></span> are in equlibrium at temperature T</li>
+<li>the vibrational degrees of freedom of <span class="math inline"><em>N</em><sub>2</sub></span> are in equilibrium at temperature <span class="math inline"><em>T</em><sub><em>v</em></sub></span></li>
+<li>for the vibrational d.o.f of <span class="math inline"><em>O</em><sub>2</sub></span> is used the partition function of the Lighthill oscillator</li>
+<li>the dissotiation of <span class="math inline"><em>O</em><sub>2</sub></span> is carachterized via the the mass fraction <span class="math inline"><em>α</em></span>, and <span class="math inline"><em>T</em><sub><em>α</em></sub></span> is rapresentative of the dissociation energy of the molecular oxigen</li>
+</ul>
+<p>So it can be considered a model defined by 3 temperature. The equation to describe the evolution of the <span class="math inline"><em>T</em><sub><em>v</em></sub></span> and <span class="math inline"><em>α</em></span> are described in the following section.</p>
+<h3 id="chemical-rate-equation">Chemical rate equation</h3>
+<p>We must consider the following reactions, at varing <span class="math inline"><em>M</em></span>, <span class="math display"><em>O</em><sub>2</sub> + <em>M</em> ↔︎ 2<em>O</em> + <em>M</em></span></p>
+<p>thus we have 3 reactions, for <span class="math inline"><em>M</em></span> equal to <span class="math inline"><em>O</em></span>, <span class="math inline"><em>O</em><sub>2</sub></span> or $ N_2$. the chemical rate equation, expressed via molar concentration is: <span class="math display">$$
+\frac{d[O]}{dt}=K_d[O_2][M] - K_r[O]^2[M]
+$$</span> that can be expressed using the equilibrum constant <span class="math inline">$K=\frac{K_d}{K_r}$</span>. <span class="math display">$$
+\frac{d[O]}{dt}=K_r(K[O_2][M] - [O]^2[M])
+$$</span> More work is needed to express it using the masss fraction <span class="math inline"><em>α</em></span></p>
+<h3 id="vibrational-temperature-equation">vibrational Temperature equation</h3>
+<p>The evolution of the vibrational Temperature of <span class="math inline"><em>N</em><sub>2</sub></span> is described by the following equation of in the Entropy of the vibrational dof of <span class="math inline"><em>N</em><sub>2</sub></span>: <span class="math display">$$
+T_v\frac{dS_v}{dt}=\frac{1}{t_c} [E_v(T) - E_v(T_v)]
+$$</span> which togheter with the equation of the entropy <span class="math display">$$
+S=k(1 +\ln\frac Q N )+ \frac{E-E_0}{T}
+$$</span></p>
+<p>lead to an ODE for <span class="math inline"><em>T</em><sub><em>v</em></sub></span>.</p>
+<h2 id="model-and-computation">model and computation</h2>
+<p>To solve the relaxation layer past a normal shock wave we know that: - the mass is conserved - the impulse is conserved - The flow is homoentalpic - the gas is in non equilibrium - we assume valid the Monti-Napolitano Model</p>
+<p>thus we can consider the set of equations formed by the following: - total mass conservation - momentum balance - energy conservation - equation of state of the gas for the pressure - equation of state of the internal energy - vibrational Temperature equation - Chemical rate equation</p>
+<p>these form a closed set of equation that can be integrated, for example with a runge-kutta method until equilibrium is reached.</p>
+<h2 id="results">Results</h2>
+<p>The relaxation layer was computed for two altitude and mach number.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Ma</th>
+<th>gamma</th>
+<th>R [J/Kg K]</th>
+<th>T [K]</th>
+<th>rho [Kg/m^3]</th>
+<th>p [Pa]</th>
+<th>n</th>
+<th>h [km]</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>6.4</td>
+<td>1.4</td>
+<td>287.05</td>
+<td>250</td>
+<td>0.004</td>
+<td>290</td>
+<td>5</td>
+<td>40</td>
+</tr>
+<tr class="even">
+<td>8.3</td>
+<td>1.4</td>
+<td>287.05</td>
+<td>264</td>
+<td>0.002</td>
+<td>150</td>
+<td>5</td>
+<td>45</td>
+</tr>
+</tbody>
+</table>
+<h3 id="km-altitude-case">40 Km altitude case</h3>
+<p>In this case we can observe how <span class="math inline"><em>T</em><sub><em>v</em></sub></span>, <span class="math inline"><em>T</em></span>, <span class="math inline"><em>α</em></span> and equlibrium concentration of atomic oxigen <span class="math inline"><em>α</em><sub><em>e</em></sub></span> evolve in the relaxation layer. The location at wich first <span class="math inline"><em>T</em><sub><em>v</em></sub></span> reaches <span class="math inline"><em>T</em></span> the vibrational d.o.f of nitrogen comes at equilibrium with the other d.o.f of the gas, we can call this condition partial equilibrium. Much further also equilibrium in the concentration of atomic oxigen is accomplished.<br />
+<img src="images/40km/NequilibriumFlowNSW_T_alpha.svg" alt="“equilibium at 40km”" /></p>
+<p>the following profiles of the thermo-fluidynamic quantities are obtained</p>
+<p><img src="images/40km/NequilibriumFlowNSW_u.svg" alt="velocity" /><br />
+<img src="images/40km/NequilibriumFlowNSW_p.svg" alt="pressure" /><br />
+<img src="images/40km/NequilibriumFlowNSW_T.svg" alt="temperature" /><br />
+<img src="images/40km/NequilibriumFlowNSW_rho.svg" alt="density" /></p>
+<p>We can observe that the evolution of the vibrational d.o.f of <span class="math inline"><em>N</em><sub>2</sub></span> influence much more than <span class="math inline"><em>α</em></span> the evolution of the thermodynamic quantities. The Temperature <span class="math inline"><em>T</em></span> decreases since the excitement of the vibrational state is an endothermic reaction. Most of the overall kinetic energy content of the gas is lost in the vibrational excitement, we can see how the velocity <span class="math inline"><em>u</em></span> drops as partial equilibrium is reached, and thus increasing the sensible hentalpy of the mixture.<br />
+Then density and pressure increase because of the conservation of mass and impulse.</p>
+<h3 id="km-altitude-case-1">45 Km altitude case</h3>
+<p>The behaviour of the thermo-fluid dynamic quantities are similar to the case at 40 Km. This time partial and complete equilibrium are accomplished almost at the same location.</p>
+<figure>
+<img src="images/45km/NequilibriumFlowNSW_T_alpha.svg" alt="“equilibium at 45km”" /><figcaption aria-hidden="true">“equilibium at 45km”</figcaption>
+</figure>
+<p>the following profiles of the thermo-fluidynamic quantities are obtained</p>
+<p><img src="images/45km/u.svg" alt="velocity" /><br />
+<img src="images/45km/p.svg" alt="pressure" /><br />
+<img src="images/45km/T.svg" alt="temperature" /><br />
+<img src="images/45km/rho.svg" alt="density" /></p>
+<h3 id="note">Note</h3>
+<blockquote>
+<p>the fact that vibrational d.o.f equilibrium is systematically reached before the equilibrium in dissotiation mass fraction <span class="math inline"><em>α</em></span> is beacause thermal equilibrium is fondamentally due to collision between particles and the excitment of the vibrational d.o.f require far less energy, and thus collisions, in contrast to the dissociation reactions</p>
+</blockquote>

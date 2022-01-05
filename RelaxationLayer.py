@@ -116,7 +116,7 @@ def main():
 
     # define initial conditions
 
-    filename="45km.json"
+    filename="data/40km.json" # choose the data to use    
     with open(filename) as file:
         gas_dict= json.load(file)
 
