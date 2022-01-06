@@ -5,5 +5,6 @@ __pycache__
 .DS_Store
 matlab/MOC
 octave-workspace
-*.png
+#*.png
 *.pdf
+*.html
