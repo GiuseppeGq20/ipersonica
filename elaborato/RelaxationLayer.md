@@ -1,6 +1,8 @@
 ---
-title: Relaxation Layer
+title: "Relaxation Layer"
+author: "Giusepp Giaquinto"
 bibliography: ref.bib
+output: pdf_document
 ---
 
 # Evaluation of the Relaxation layer past a Normal shockWave using Monti-Napolitano model
@@ -112,17 +114,17 @@ first $T_v$ reaches $T$ the vibrational d.o.f of nitrogen comes at equilibrium w
 the other d.o.f of the gas, we can call this condition partial equilibrium. Much further
 also equilibrium in the concentration of atomic oxigen is accomplished.  
 
-![equilibium at 40km](images/40km/equilibrium.png)  
+![equilibium at 40km](images/40km/equilibrium.png){width=80%}  
 
 the following profiles of the thermo-fluidynamic quantities are obtained
 
-![velocity profile at 40km](./images/40km/u.png)  
+![velocity profile at 40km](./images/40km/u.png){width=80%}
 
-![pressure profile at 40km](./images/40km/p.png)  
+![pressure profile at 40km](./images/40km/p.png){width=80%}
 
-![temperature profile at 40km](./images/40km/T.png)  
+![temperature profile at 40km](./images/40km/T.png){width=80%}
 
-![density profile at 40km](./images/40km/rho.png)  
+![density profile at 40km](./images/40km/rho.png){width=80%}
 
 We can observe that the evolution of the vibrational d.o.f of $N_2$ influence
 much more than $\alpha$ the evolution of  the thermodynamic quantities.
@@ -138,17 +140,17 @@ The behaviour of the thermo-fluid dynamic quantities are similar to the case at
 40 Km.
 This time partial and complete equilibrium are accomplished almost at the same location.
 
-![equilibium at 45km](./images/45km/equilibrium.png)  
+![equilibium at 45km](./images/45km/equilibrium.png){width=80%}
 
 the following profiles of the thermo-fluidynamic quantities are obtained
 
-![velocity profile at 45km](./images/45km/u.png)  
+![velocity profile at 45km](./images/45km/u.png){width=80%}
 
-![pressure profile at 45km](./images/45km/p.png)  
+![pressure profile at 45km](./images/45km/p.png){width=80%}
 
-![temperature profile at 45km](./images/45km/T.png)  
+![temperature profile at 45km](./images/45km/T.png){width=80%}
 
-![density profile at 45km](./images/45km/rho.png) 
+![density profile at 45km](./images/45km/rho.png){width=80%}
 
 ### Note
 > the fact that vibrational d.o.f equilibrium is systematically reached before the
