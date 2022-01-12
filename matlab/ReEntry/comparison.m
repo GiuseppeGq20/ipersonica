@@ -97,6 +97,3 @@ ylabel("H [Km]")
 xlabel("Ma_{\infty}")
 legend(Legend)
 hold off
-
-%%nota
-% sottostima flussi termici e accelerazioni rispetto al testo

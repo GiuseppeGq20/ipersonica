@@ -1,2 +1,0 @@
-%config environment
-addpath("fcn")

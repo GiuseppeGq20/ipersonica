@@ -31,7 +31,7 @@ a = -0.5*ship.B*rho(h).*(v.^2) + transpose(g(h)).*sin(x(:,2));
 
 %%
     function xdot= balistic_rhs(h,x, ship, g,rho)
-        global r0
+        
         %x1 è v
         %x2 è gamma
         xdot=zeros(2,1);
