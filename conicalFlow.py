@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import solve_ivp, trapezoid
 from scipy.optimize import root_scalar
-import flow.flows as fl
+import flows as fl
 
 
 def _TaylorMaccoll(w, y, gas):
@@ -55,8 +55,10 @@ def solveTaylorMaccoll(beta: float, gas: fl.Gas):
         [beta, 0.0],
         [y1_0, y2_0],
         events=event,
-        method="BDF"
-        ) #BDF backward difference to have a better resolution
+        method="RK45",
+        rtol=1e-12,
+        atol=1e-15
+        )
 
     if not sol.success:
         raise RuntimeError(sol.message) 

@@ -9,7 +9,7 @@ bib: Elementi di Aerodinamica Ipersonica/Rodolfo Monti, Gennaro Zuppardi
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
-import flow.flows as fl
+import flows as fl
 import json
 
 # Constants
