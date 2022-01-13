@@ -12,12 +12,12 @@ with its environment then *it will appear to choose a macroscopic configuration
 that maximizes the number of microstates*.
 This implicitly assumes that:
 
-- each one of the possible microstates is equally likely to occur
-- the microstates of the system are continuallt changing
-- given enough time, the system will explore all possible microstates and spend
+- Each one of the possible microstates is equally likely to occur
+- The microstates of the system are changing continuously
+- Given enough time, the system will explore all possible microstates and spend
   equal time in each of them (ergodic hypothesis).
 
-This conditions leads to a "statistical" definition of temperature:  
+These conditions lead to a "statistical" definition of temperature:  
 $$
     \frac{1}{k_b T}= \frac{d \ln \Omega}{d E}
 $$
@@ -28,24 +28,24 @@ There are three main ensembles that tends to be used in thermal physics:
 
 1. **Microcanonical ensemble** : an ensemble of systems that have each the same 
    fixed energy
-2. **Canonical ensemble** : an ensebmle of systems each of wich can exchange 
+2. **Canonical ensemble** : an ensemble of systems each of which can exchange 
    its energy with a large reservoir of heat (Heat bath). This fixes their temperature
-3. **Grand canonical ensemble** : an enseble of systems, each of wich can exchange
+3. **Grand canonical ensemble** : an ensemble of systems, each of which can exchange
    energy and particles with a large reservoir. This fixes the system's temperature
    and chemical potential.
 
 ## Canonical ensemble and Boltzmann distribution
 
-Let us consider a system with energy $\epsilon$ in an heat bath. the total Energy 
+Let us consider a system with energy $\epsilon$ in a heat bath. The total Energy 
 of system + heat bath is fixed and has value $E$ (thus the system is part of the 
-canonical ensamble with energy $E$). The heat bath has energy $E-\epsilon$.
+canonical ensemble with energy $E$). The heat bath has energy $E-\epsilon$.
 To each possible energy $\epsilon$ of the system is associated one microstate.
-Thus the probability that the system has energy $\epsilon$ is proportional to:
+Thus, the probability that the system has energy $\epsilon$ is proportional to:
 $$
 P(\epsilon) \propto \Omega(E-\epsilon)\times 1
 $$
-we can take the logarithm of the righthand side, and since $\epsilon << E$ we can 
-perfrom a Taylor series expansion around $\epsilon=0$ up to the first order.
+We can take the logarithm of the right-hand side, and since $\epsilon << E$ we can 
+perform a Taylor series expansion around $\epsilon=0$ up to the first order.
 $$
 \ln(\Omega(E-\epsilon))=\ln(E)-\frac{d\ln(\Omega(E))}{d\epsilon}\epsilon= \ln(\Omega(E)) - \frac{\epsilon}{k_B T}
 $$
@@ -57,7 +57,7 @@ and then we can conclude that:
 $$
 P(\epsilon) \propto e^{-\frac{\epsilon}{k_B T}}
 $$
-To get a proper distribution function we have to nomalize it, so the probability
+To get a proper distribution function we have to normalize it, so the probability
 of the system to be in a particular microstate $r$ with energy $E_r$ is given by:
 $$
 P(r)= \frac{e^{-\frac{E_r}{k_B T}}}{Z}
@@ -65,18 +65,18 @@ $$
 Where $Z = \sum_i e^{-\frac{E_i}{k_B T}}$ is the partition function of the system. 
 It accounts for all the possible energy levels that the system can assume.
 
-> for a similar discussion on the canonical distribution you can also take a look 
+> For a similar discussion on the canonical distribution you can also take a look 
 > at this [wiki page](https://it.wikipedia.org/wiki/Distribuzione_di_Boltzmann)
 
 ## Maxwell-Boltzmann distribution
 
-To get the distribuion function of a system of molecules ,in thermal equlibrium, 
+To get the distribution function of a system of molecules ,in thermal equilibrium, 
 moving at speed $v_x$ and $v_x + dv_x$ along the $x$ direction we can recall the 
 Boltzmann distribution so that:
 $$
 P(v_x) \propto e^{\frac{mv_x^2}{2K_BT}}dv_x
 $$
-since $v_x$ is a continous variable. Hence this relation for the distribution 
+Since $v_x$ is a continuous variable. Hence, this relation for the distribution 
 function $g$ is valid:
 $$
 g(v_x) \propto e^{\frac{mv_x^2}{2K_BT}}
@@ -93,34 +93,33 @@ $$
 Analogous expression are valid for the distribution function of molecules moving 
 along the other coordinate axis with prescribed velocity.
 
-> nspecting the $g$ distribution expression we recognise that it is a gaussian 
+> Inspecting the $g$ distribution expression we recognize that it is a Gaussian 
 > distribution with mean 0 and variance $\sigma^2= \frac {K_BT} m$
 
 The distribution function $G$ of the fraction of molecules with velocities between
 ($v_x,v_y,v_z$) and ($v_x + dv_x,v_y + dv_y,v_z + dv_z$) is given by the product
-of the $g$ distribution functions (we are assuming that v_x,v_y and v_z are stocastically 
-indipendent) so that:  
+of the $g$ distribution functions (we are assuming that v_x, v_y and v_z are stochastically 
+independent) so that:  
 $$
     G(v_x,v_y,v_z)=g(v_x)g(v_y)g(v_z)=\left(\frac m {2\pi k_BT}\right)^\frac 3 2 e^{\frac{m (v_x^2 + v_y^2 + v_z^2)}{2K_BT}}
 $$
 
 > Note: this distribution is important when dealing with free and near free molecular flow
 
-> from previous note we recognise that G is the joint distribution of the $g$ 
-> distribution functions that are assumed indipendent from each other. this lead 
-> to the conclusion that also G is a multivariate gaussian distribution in wich 
+> From previous note we recognize that G is the joint distribution of the $g$ 
+> distribution functions that are assumed independent of each other. This lead 
+> to the conclusion that also G is a multivariate Gaussian distribution in which 
 > the correlation terms in the variance matrix are equal to zero. 
 
 ### speed distribution
 
-Now we ask what is the distribution function $f$ of molecules ,in thermal equilibrium, 
+Now we ask what is the distribution function $f$ of molecules, in thermal equilibrium, 
 moving between speed $\mathbf v$ and $\mathbf v + d\mathbf v$, (now we are not 
-fixing each velocity component as in the previous section when discussing about 
-the $G$ distribution function).
+fixing each velocity component as in the previous section when discussing the $G$ distribution function).
 The probability of finding a particle in such state is proportional to a Boltzmann
 factor (characterized by the kinetic energy of the particle $\frac 1 2 m v^2$) 
 times the velocity space volume associated with particles at speed between
-$\mathbf v$ and $\mathbf v + d\mathbf v$. this correspond to a spherical shell 
+$\mathbf v$ and $\mathbf v + d\mathbf v$. This corresponds to a spherical shell 
 of thickness $dv$, $4\pi v^2 dv$.  
 Hence:  
 $$
@@ -143,12 +142,12 @@ $$
 > and as one might expect the probability of finding a particle moving at speed 
 > $\mathbf v$ without jointly fixing its component is greater
 
-> The Maxwell distribution solve the Boltzmann equation for a system of particles:
+> The Maxwell distribution solves the Boltzmann equation for a system of particles:
 > 
 > - in equilibrium
 > - uniformly distributed in space, 
 > - with a fixed or null convective velocity
-> - non interacting particle (i.e. no Coulomb forces)
+> - non-interacting particle (i.e. no Coulomb forces)
 > 
 > This is also said to be a *hard sphere* approximation of the system of particles
 
@@ -156,17 +155,17 @@ $$
 
 we can define the followings:
 
-- mean velocity  $\langle v \rangle = \sqrt{\frac{8K_BT}{\pi m}}$
+- mean velocity $\langle v \rangle = \sqrt{\frac{8K_BT}{\pi m}}$
 - mean squared velocity $\langle v^2 \rangle= \frac {3K_BT}{m}$, this lead to the conclusion 
   that the mean kinetic energy of a particle is $\langle E_k\rangle=\frac 3 2 K_BT$
-- most likely velocity (wich is the velocity at wich the $f$ distribution reach 
-  is maximum value)  $v_{max} = \sqrt{\frac{2K_BT}m}$
+- most likely velocity (which is the velocity at which the $f$ distribution reach 
+  is maximum value) $v_{max} = \sqrt{\frac{2K_BT}m}$
 
 ## Mean Collision time
 
-the events consistiong of particle colliding into each other distribute as an 
+The events consisting of particle colliding into each other distribute as an 
 exponential random variate of parameter $n\sigma v$ where $\sigma$ is the 
-collisional cross section.Thus the mean collision time is:
+collisional cross section.Thus, the mean collision time is:
 $$
 \tau= \frac 1 {n\sigma v}
 $$
@@ -194,7 +193,7 @@ $$ P(t)= e^{-n\sigma v t}$$
 Now the probability of surviving without collision up to time $t$ but then colliding
 in the next dt is:
 $$ P(t)= e^{-n\sigma v t}n\sigma v dt$$
-This define the collision time, wich distribute as an exponential random variate.
+This defines the collision time, which distribute as an exponential random variate.
 We can calculate:
 
 - mean collisional time: $\tau=\frac 1 {n\sigma v}$
@@ -211,26 +210,26 @@ V(R)=
 \infty \qquad R\leq b
 \end{cases}
 $$
-wich implies that two molecule collide if their distance is less than  the impact 
+Which implies that two molecule collide if their distance is less than the impact 
 parameter $b$.  
-Thus molecules can be tought of moving from one collision to another inside an 
-immaginary tube of cross-section $\sigma = \pi b^2$.
+Thus, molecules can be thought of moving from one collision to another inside an 
+imaginary tube of cross-section $\sigma = \pi b^2$.
 
-> the hard sphere potential approximation is valid for not too low, nor to high 
+> The hard sphere potential approximation is valid for not too low, nor to high 
 > temperature
 
 ## Mean free path
 
-Consider a first class of molecules wich moves at velocity $\mathbf v$ and
+Consider a first class of molecules which moves at velocity $\mathbf v$ and
 consider only collision with a second class of molecules which move at velocity 
-$\mathbf u$ . In a frame moving at velocity $\mathbf u$ , this second class of 
+$\mathbf u$. In a frame moving at velocity $\mathbf u$, this second class of 
 molecules are stationary and offer a total cross-section of 
 $n\sigma f(\mathbf u)d\mathbf u$, where $f(\mathbf u)=g(u_x)g(u_y)g(u_z)$ is 
 a Maxwell-Boltzmann distribution for the vector $\mathbf u=(u_x,u_y,u_z)$. 
 In unit time, the total volume swept out by these targets relative to the 
 first class of molecules (which in this frame move at velocity 
 $\mathbf v - \mathbf u$) is $| \mathbf v - \mathbf u|n\sigma f(\mathbf u)d\mathbf u$.  
-The number of encounters per second is obtained by multipliyng this volume by the 
+The number of encounters per second is obtained by multiplying this volume by the 
 probability of finding one of the first class of molecules in unit volume,
 giving $| \mathbf v - \mathbf u|n\sigma f(\mathbf u)d\mathbf u f(\mathbf v)d\mathbf v$.
 The collision rate $R$ is therefore obtained by integrating over all $\mathbf u$
@@ -242,13 +241,13 @@ $$
 
 which writing 
 $x=\frac {\mathbf v - \mathbf u}{\sqrt 2}$ and $y=\frac {\mathbf v + \mathbf u}{\sqrt 2}$ 
-can be trasformed into  
+can be transformed into  
 
 $$ 
 R= n \sigma \sqrt 2 \int |x|n\sigma f(\mathbf x)dx \int f(\mathbf y)d\mathbf y 
 $$  
 
-where the first integral yields $\langle v\rangle$ and  the second integral is unity. Hence
+Where the first integral yields $\langle v\rangle$ and the second integral is unity. Hence,
 $R=n\sigma\sqrt 2 \langle v\rangle$ and the mean free path is:
 $$
 \lambda = \frac {\langle v\rangle} R = \frac 1 {n \sigma \sqrt 2} 
@@ -262,18 +261,18 @@ entropy is defined as:
 $$
 dS = \frac {dQ_{rev}}{T}
 $$
-and it is a function of state.
+And it is a function of state.
 
-> note: since **entropy** is a function of state, its evaluation doesn't depend
-> on the particular trasformation to which the system is subjected to. Hence even 
+> Note: since **entropy** is a function of state, its evaluation doesn't depend
+> on the particular transformation to which the system is subjected to. Hence even 
 > for an irreversible process we can evaluate the change in entropy of the process
-> from state **A** to state **B** by evaluating a the change in entropy of a
-> reversible trasformation of the same system that has the same intial and final 
+> from state **A** to state **B** by evaluating the change in entropy of a
+> reversible transformation of the same system that has the same initial and final 
 > states **A** and **B**.
 
-### another statement of the II law using the entropy
+### Another statement of the II law using the entropy
 
-For a thermally isolated system  the change in entropy is always greater or equal to zero.
+For a thermally isolated system the change in entropy is always greater or equal to zero.
 $$ dS \geq 0 $$
 
 ## Statistical definition of entropy
@@ -314,14 +313,14 @@ To overcome this difficulties of using the Boltzmann entropy relation we can use
 the Gibbs formula that gives the entropy that we can measure S (of the macrostates).
 we begin by stating that the total entropy is:
 $$ S_{tot}= S + S_{micro}$$
-where $S$ is the entropy that we can actually measure and $S_{micro}$ is the 
+Where $S$ is the entropy that we can actually measure and $S_{micro}$ is the 
 entropy associated with the microstates. It is the expected value of the variuos
 microstate Entropy associated with each macrostate:
 $$
 S_{micro}=\langle S_{i}\rangle=\sum_i P_iS_i
 $$
 Where $S_i$ is given by Boltzmann formula $S_i=k_B\ln n_i$.  
-Each macrostate has $n_i$ microstate and $\sum_i n_i=N$, the toatl number N of 
+Each macrostate has $n_i$ microstate and $\sum_i n_i=N$, the total number N of 
 microstate of the system.
 So the probability of finding the system in the i-th macrostate is:
 $$
