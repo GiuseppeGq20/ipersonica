@@ -2,24 +2,7 @@ import numpy as np
 from scipy.optimize import root_scalar
 from dataclasses import dataclass, field
 
-
-@dataclass
-class GasDataclass:
-    Ma:float
-    gamma: float = field(init=False)
-    R: float = field(init=False) #Nm/kgK
-    T: float = field(init=False) # K
-    rho: float = field(init=False) #kg/m3
-    p: float = field(init=False) #Pa 
-    n: int = field(init=False) #dof
-    cp: float = field(init=False)
-    a: float = field(init=False)#m/s
-    H: float = field(init=False) #J
-
-    def __post_init__(self):
-        self.cp=self.R* self.gamma /(self.gamma - 1)
-        self.a= (self.gamma*self.R*self.T)**0.5 #m/s
-        self.H= self.cp*self.T + 0.5*((self.Ma*self.a)**2) #J
+# try do define an interface for Gas class
 
 class Gas:
 

@@ -63,7 +63,7 @@ def solveTaylorMaccoll(beta: float, gas: fl.Gas):
     if not sol.success:
         raise RuntimeError(sol.message) 
 
-    return sol.t ,sol.y*Vlim/a2
+    return sol.t ,sol.y*Vlim
 
 def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     """
@@ -85,7 +85,7 @@ def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     betac= root_scalar(
         error,
         method='secant',
-        x0= beta_0,
+        x0= beta_0, # change it to be beta such that M2 =1, pg.183
         x1= beta_1,
         maxiter=100,
         xtol=1e-8
@@ -219,9 +219,8 @@ def cpHigh(deltaC: float, alpha:float, Ma: float, phi: np.ndarray) -> np.ndarray
         else:
             f = Ma*np.cos(delta) * np.sqrt(1- np.sin(delta)/Ma) / np.sqrt(
                 1 + 0.35* ((Ma*np.sin(delta))**1.5))
-                    
-        f= f**(-1.5)
-        return f
+
+        return f**(-1.5)
     
     # evaluete cp at phi=pi/2
     deltaE_star=deltaLocalCone(deltaC,alpha,phi=np.pi/2)
@@ -265,8 +264,8 @@ def calcCLCdCone(deltaC: float, alpha:float , phi:np.ndarray, cp: np.ndarray)->t
         raise RuntimeError("phi and cp must have the same length")
 
     # calc coefficients along coordinate axis
-    Cfx = trapezoid(cp,phi) * np.sin(deltaC)/(2*np.pi)
-    Cfy = trapezoid(cp*np.cos(phi),phi) * np.cos(deltaC)/(2*np.pi)
+    Cfx = trapezoid(cp,phi) /(2*np.pi)
+    Cfy = trapezoid(cp*np.cos(phi),phi) /((2*np.pi)*np.tan(deltaC))
 
     # calc aerodynamic coefficients
     Cd= Cfx*np.cos(alpha) + Cfy*np.sin(alpha)
@@ -291,9 +290,9 @@ if __name__ == "__main__":
 
     beta = np.arcsin(1.2/Ma)
 
-    w,Ma = solveTaylorMaccoll(beta,air)
-    Mw=Ma[1]
-    Mr=Ma[0]
+    w,V = solveTaylorMaccoll(beta,air)
+    Mw=V[1]
+    Mr=V[0]
 
     deltac=np.deg2rad(15)
     beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.8*beta_0
