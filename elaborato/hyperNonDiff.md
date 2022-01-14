@@ -5,7 +5,7 @@ author: "Giuseppe Giaquinto"
 
 # Euler equations
 
-### Compressible bernoulli equation
+### Compressible Bernoulli equation
 
 # Method of characteristics
 
