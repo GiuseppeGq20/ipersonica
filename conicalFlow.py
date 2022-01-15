@@ -4,7 +4,7 @@ import numpy as np
 from scipy.integrate import solve_ivp, trapezoid
 from scipy.optimize import root_scalar
 import flows as fl
-
+import copy
 
 def _TaylorMaccoll(w, y, gas):
 
@@ -78,17 +78,20 @@ def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     - beta: cone shock angle in radians
     """
 
+
     def error(beta):
         w,_= solveTaylorMaccoll(beta,gas)
         return w[-1] - delta
     
+    # beta_0=fl.betaMax(delta,air)
+    # beta_1=0.9*beta_0
     betac= root_scalar(
         error,
         method='secant',
         x0= beta_0, # change it to be beta such that M2 =1, pg.183
         x1= beta_1,
         maxiter=100,
-        xtol=1e-8
+        xtol=1e-10
     )
     
     if betac.root < 0: raise RuntimeError("shock angle can't be negative")
@@ -97,7 +100,7 @@ def betaCone(delta: float, beta_0: float,beta_1: float, gas: fl.Gas)-> float:
     
     return betac.root
 
-def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
+def calcMaxDelta(Gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
     """
     Calc max semi aperture angle of a cone at zero angle of attack
     and max shock angle given the asintotic Mach
@@ -111,6 +114,7 @@ def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
     - delta: ndarray of semi aperture cone angles in radians
     - beta: ndarray of shock angles corresponding to M2=1 in radians
     """
+    gas=copy.deepcopy(Gas)
 
     if isinstance(Mach, type(None)):
         Mach=np.array([gas.Ma])
@@ -133,6 +137,7 @@ def calcMaxDelta(gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
     delta=np.zeros_like(Mach)
     beta=np.zeros_like(Mach)
 
+    
     for i in range(Mach.size):
         gas.Ma = Mach[i]
         #update properties that depends on Mach
@@ -276,7 +281,7 @@ def calcCLCdCone(deltaC: float, alpha:float , phi:np.ndarray, cp: np.ndarray)->t
 if __name__ == "__main__":
 
     # dati gas
-    Ma = 1.7
+    Ma = 3
     dict_air={
     "Ma": Ma,
     "gamma": 1.4,
