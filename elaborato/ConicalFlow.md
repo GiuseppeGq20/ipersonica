@@ -1,98 +1,106 @@
 ---
 title: "Conical Flow"
+
 ---
 # Conical Flow
 
-# Equazione di Taylor Maccoll
+## Taylor Maccoll equation
 
-Studiando il problema del campo di moto inviscido attorno ad un cono a zero angolo
-d' attacco posto in una corrente a numero di Mach asintotico $Ma_{\infty}$
-con onda d'urto attaccata al cono si giunge ad un problema differenziale ordinario 
-del secondo ordine non lineare che è espresso dal  sistema di equazioni
-di Taylor Maccoll, in cui $v_r$ e $v_\omega$ sono le componenti 
-della velocitá adimensionalizzate rispetto a $V_{lim} = \sqrt{2H}$ e 
-$C= \frac {\gamma-1} 2 (1 - v_r^2 - v_\omega^2)$ .
-
+let us consider the flowfiled of a supersonic cone. If we assume that:
+- the flow is non viscous, nor reacting
+- the flowfiled is completely supersonic
+- the cone shock wave is attached
+- the cone has zero angle of attack $\alpha$
+We can simplify the euler equations, by expressing them in spherical refernce frame
+originating from the cone. In fact, in this settings, for the symmetry of the problem
+the shock wave is conical and concetric to the cone, so that the flow is homoentropic
+and thus the flow field does't depend on the azimutal angle and the velocity in that
+direction is null. Furthermore, the thermofluid dynamic properties of the flow 
+don't dependo on the radial coordinate.
+So we obtain the Taylor Maccoll equations: 
 $$
 \begin{aligned}
 \frac{dv_r}{d\omega}&= v_w\\
 \frac{dv_\omega}{d\omega}&=\frac 1 {C - 2v_\omega²}[2v_w v_r \frac{dv_r}{d\omega} -C(2v_r + v_\omega\cot(\omega))]\\
 \end{aligned}
 $$
+where $v_r$ and $v_\omega$ are the velocity components divided by $V_{lim} = \sqrt{2H}$ and
+$C= \frac {\gamma-1} 2 (1 - v_r^2 - v_\omega^2)$.  
+This set of equation can be numerically solved but the peculiar aspect of it are
+the boundary conditions: to integrate this system we must know the velocity components
+$v_r (\omega)$ and $v_\omega (\omega)$, after the shock but tha shock
+angle is unknow. This lead to a iterative procedure to find 
+the appropriate shock angle for a given cone.
 
-Questa equazioni possono essere integrate numericamente per ottenere le componenti
-di velocità $v_r (\omega)$ e $v_\omega (\omega)$, nel codice la risoluzione 
-di tali equazioni è implementata nella funzione `SolveTaylorMaccol()`. 
-La particolarità di questo sistema di equazioni sono le condizioni al contorno. 
-Infatti per l'integrazione del sistema bisogna conoscere la velocità 
-a valle dell'urto. Ma l' angolo d'urto è esso stesso incognito.
+### Numerical procedure
 
-### Strategia risolutiva
+To solve the Taylor Maccoll equation the following numerical procedure can be 
+adopted:
 
-Per risolvere il problema si puó adottare il seguente schema risolutivo:
+1) Integrate the Taylor Maccol equations with an appropriate ODE solver, starting
+from a given shock angle $\beta$, and stop the integration when $v_w=0$, the $\omega$
+angle at which $v_w=0$ is the cone angle $\delta_c$ that realizes that shock angle$\beta$ 
 
-1) si integra il sistema di Taylor Maccoll con un opportuno solutore di ODE 
-   supponendo noto l'angolo d'urto $\beta$ e l'integrazione si ferma al 
-   soddisfacimento della condizione $v_w=0$ , ovvero la condizione di tangenza 
-   della corrente sul corpo. Ovviamente l'angolo $\omega_{fin}$ per cui si ha  
-   $v_w=0$ non coincide con l'angolo $\delta_c$ del cono.  
-   Nel codice tale routine é implementata nella funzione `SolveTaylorMaccol()`
-
-2) Si può a questo punto utilizzare un algoritmo di root-finding sulla funzione errore:
+2) Then we can use a root-finding algorithm on the error function: 
    $$
    e(\beta)= \omega_{fin}(\beta)-\delta_c
    $$
-   l'angolo $\beta$ cosí ottenuto é l'angolo dell'onda d'urto conica.
-   Nel codice questo é implementato con un metodo delle secanti nella 
-   funzione `betaCone()`, al variare dell'inizializzazione dell' algoritmo 
-   si possono ottenere la soluzione forte o debole dell'urto, tuttavia 
-   il metodo non garantisce convergenza per ogni valore di tentativo per 
-   l'inizializzazione del metodo delle secanti.
+   The $\beta$ obtained is the shock angle for the specified cone, whith $\delta_c$.
 
-## massimo angolo di semiapertura del cono a fissato $Ma_\infty$
+>**note**: the implementation in the code is with a secant method , varying the initialization
+of the algorithm we can get the strong or the weak solution for the shock angle,
+however this method does not guarantee the convergence to the solution for any possible
+initialization
 
-Il massimo angolo di apertura del cono $\delta_c$ corrisponde a quell' angolo 
-per cui il numero numero di mach a valle dell' onda d' urto è unitario. 
-Si può impostare la seguente strategia per risolvere questo problema:
 
-- definire la funzione $f(Ma_\infty , \beta) = M_2 -1$
-- trovare l' angolo $\beta$ per cui $f=0$ 
-- Integrare le equazioni di Taylor-Maccoll, noti $\beta$ e $Ma_\infty$ , 
-da cui si può ottenere $\delta_{c,max}$
+## maximum cone angle $\delta_c$ at fixed $Ma_\infty$
 
-## calcolo coefficienti aerodinamici
+The maximum cone angle $\delta_c$ is the angle that realize a Mach number equal to
+one downstream the shock.  
+We can adopt the following strategy to find it:
 
-Attraverso i metodo del cono locale e di High é possibile calcolare il $c_p$ sulla
-superficie del cono. Per la genesi di questi metodi, il $c_p$ e funzione solo 
-dell'angolo $\phi$ , da questa osservazione si ha che la forza aerodinamica 
-per unità di pressione dinamica é data dalla relazione:
+1) Let us define the error function $f(Ma_\infty , \beta) = M_2 -1$
+2) find the angle $\beta$ such that $f=0$ 
+3) Solve the Taylor-Maccoll equation with $\beta$ calculated at the preceeding step, 
+from the solution we get $\delta_{c,max}$
+
+## aerodynamic coefficients
+
+We can calculate the $\c_p$ distribution of a pitched cone by using local cone
+method and the High method. Because of the genesis of these methods, the $c_p$ 
+distribution depend only on the $\phi$ coordinate, with this observation we can
+express the aerodynamic force divided by the freestream dynamic pressure:
 $$
 \frac F {q_\infty}= \int_0^R \int_0^{2\pi}  c_p(\phi) \frac r {sin(\delta_c)}drd\phi = \frac {R^2} {2 sin(\delta_c)} \int_0^{2\pi} c_p(\phi) d\phi
 $$
+It is worth noting that these method only give decent results for small angle of 
+attack
 
-### calcolo $C_{Fx}$ e ${C_{Fy}}$
+### $C_{Fx}$ and ${C_{Fy}}$ calculation
 
-L' asse x coincide con l'asse del cono e dunque la forza per unitá di pressione 
-dinamica lungo l'asse x,  $F_x$,  é data dalla relazione (2).
-Per ottenere la forza per unitá di pressione dinamica lungo l'asse y , $F_y$, bisogna
-proiettare la forza aerodinamica radiale $F_R = F\cos(\delta_c)$ lungo 
-l'asse y ottenendo la relazione.
+The $x$ axis coincide with the cone axis and so the force for unit dynamic pressure 
+$F_x$ is given by eq. (2).  
+To get the force for unit dynamic pressure along the $y$ axis we must project
+the radial aerodynamic force onto the $y$ axis thus, obtaining eq. (3).
+The reference area is the lateral surface of the cone
 $$
 C_{F_x}= \frac {F_{x}}{ \frac {\pi R^2}{\sin(\delta_c)}} = 
-\frac {\sin(\delta_c)}{2\pi} \int_0^{2\pi} c_pd\phi
-$$ (2)
+\frac {\sin(\delta_c)}{2\pi} \int_0^{2\pi} c_pd\phi \tag {2}
+$$
 
 $$
 C_{F_y}= \frac {F_{y}}{ \frac {\pi R^2}{\sin(\delta_c)}} = 
 \frac {\cos(\delta_c)}{2\pi} \int_0^{2\pi} c_p\cos(\phi)d\phi
-$$ (3)
+\tag{3}
+$$
 
-Questi due integrali posso essere calcolati numericamente una volta nota la 
-distribuzione di $c_p$.
+These two finite integrals can be numerically evalueted once the $c_p$ distribution
+is known.
 
-### calcolo $C_l$ e $C_d$
+### $C_l$ e $C_d$ calculation
 
-I coefficienti $C_l$ e $C_d$ sono calcolati attraverso la seguente trasformazione 
+$C_l$ e $C_d$  can be evaluated with the following realtions:
+te trasformazione 
 di rotazione di un angolo  pari all'angolo di attacco $\alpha$ :
 $$
 \begin{aligned}
@@ -100,6 +108,4 @@ C_d&= C_{F_x}\cos(\alpha) + C_{F_y}\sin(\alpha) \\
 C_l&= -C_{F_x}\sin(\alpha) + C_{F_y}\cos(\alpha)\\
 \end{aligned}
 $$
-Il calcolo dei coefficienti aerodinamici é implementato nella funzione `calcClCdCone()`. 
-Gli integrali che compaiono nell eqs. (2) e (3) sono calcolati attraverso 
-una regola trapezoidale.
+
