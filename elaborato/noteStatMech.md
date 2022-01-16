@@ -264,7 +264,7 @@ $$
 And it is a function of state.
 
 > Note: since **entropy** is a function of state, its evaluation doesn't depend
-> on the particular transformation to which the system is subjected to. Hence even 
+> on the particular transformation to which the system is subjected to. Hence, even 
 > for an irreversible process we can evaluate the change in entropy of the process
 > from state **A** to state **B** by evaluating the change in entropy of a
 > reversible transformation of the same system that has the same initial and final 
