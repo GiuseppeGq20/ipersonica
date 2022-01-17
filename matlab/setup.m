@@ -4,3 +4,4 @@
 addpath ("functions");
 addpath("teoApprox");
 addpath("ReEntry");
+addpath("viscousInteraction")

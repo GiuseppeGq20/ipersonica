@@ -3,7 +3,9 @@ function cp = cpCuneoTangente(Ma,n,theta)
 %INPUT:
 % Ma: upstream mach
 % n: gas d.o.f.
-% theta: current angle deviation vector
+% theta: current angle deviation array
+%OUTPUT:
+%cp: cp distribution
 
 cp=NaN(1,length(theta));
 

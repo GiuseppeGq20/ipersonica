@@ -1,5 +1,12 @@
 function cp=cpUrtoEspansione(Ma,theta,n)
 %% calc cp with shcok expansion theory
+%INPUT:
+% Ma: upstream mach
+% n: gas d.o.f.
+% theta: current angle deviation array
+%OUTPUT:
+%cp: cp distribution
+
 
 %calc leading edge shock angle
 beta= obliqueShock(theta(1),Ma,n); 
