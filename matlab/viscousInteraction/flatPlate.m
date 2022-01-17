@@ -1,5 +1,5 @@
 % flate plate hypersonic boundary layer using viscous interaction theory
-
+clc;clear;close all
 %flow data
 gas.gamma=1.4;
 gas.n=5;
@@ -18,52 +18,39 @@ Re_inf=9.87e5;
 
 %plate data
 L=1;
-x=linspace(0,L,40);
+x=linspace(0,L,80);
 T_w=gas.Taw;
 
 % boundary layer parameters
 C_w=1; %(rho_W*mu_w)/(rho_e*mu_e) asumed parameter, it reproduces the results from the text, 
 
 Re_x=(Re_inf/L).*x; % Rxe/Re_inf=x/L
-Chi=(M^3)*(C_w./Rex).^0.5; % Chi is singular at zero
+Chi=(M^3)*(C_w./Re_x).^0.5; % Chi is singular at zero
 
-% viscous interaction loop
-err=1;
-theta=zeros(1, length(x)-1);
-delta_star=zeros(1,length(x)-1);
-dx=x(2:end)-x(1:end-1);
-p_ratio=ones(1,length(x)-1);
+%viscous interaction loop
+[p_ratio,delta_star]=viscousInteraction(Chi,x,M,T_w,gas,"tangent_wedge");
 
-iter=0;
-while err>1e-3
+[p_ratio1,delta_star1]=viscousInteraction(Chi,x,M,T_w,gas,"shock_expansion");
 
-    temp=deltaStar(gas,p_ratio,Chi,M,x,T_w);
-    
-    theta=atan(diff(temp)./diff(x(1:end-1)));
-    theta=[theta,theta(end)];
-    
-    %tangent wedge
-    p_ratio= 1 + gas.gamma*(M*theta) + gas.gamma*((gas.gamma+1)/4)*(M*theta).^2;
-    
-    %add shock expansion method
-    
-    err=norm((delta_star-temp));
-    delta_star=temp;
-    
-    iter=iter+1
-end
+% calc skin friction coefficient you, must use Ve
+% suppose Te=T_inf=cost
+Ve=(0.5*(gas.v^2 + gas.R*gas.T*log(p_ratio1))).^.5;
+Ve(1)=Ve(2);
+Re_x=Re_x.*([Ve,Ve(end)]/gas.v);
 
-% calc skin friction coefficient you must use Ve
 cf=0.664*(Tratio(M,gas,T_w)^(-1/3))./(Re_x.^0.5); %adjust cf calulation, see pag, 344
 
 % calc drag coefficient
-cd=trapz(x(2:end),cf(2:end))/L
+cd=trapz(x,[cf(2),cf(2:end)])/L
 
 %% plotting
+
 plot(x,[delta_star,NaN])
+
 figure()
 plot(x,[p_ratio,NaN])
 figure()
 plot(x,cf)
+ylabel("c_f")
 figure()
 plot(x,Chi)
