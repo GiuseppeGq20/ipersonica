@@ -1,3 +1,4 @@
+from xxlimited import new
 import numpy as np
 from scipy.optimize import root_scalar
 # try do define an interface for Gas class
@@ -39,7 +40,7 @@ def isentropicFlow(Ma: np.ndarray,gas: Gas):
     >>> air=Gas(dict_air)
     >>> T_T0,p_p0,rho_rho0=isentropicFlow(np.array([0.8,2]),air)
     >>> np.isclose(T_T0,[0.8865,0.5556],rtol=1e-3).all()==True
-        True
+    True
     """
     T_T0=(1 + ((gas.gamma -1)/2)*(Ma**2))**-1
     p_p0=(T_T0)**(gas.gamma/(gas.gamma -1))
@@ -63,7 +64,7 @@ def obliqueShock(theta: float,gas: Gas)-> float:
     >>> air1=Gas(dict_air)
     >>> beta=obliqueShock(np.deg2rad(10),air1)
     >>> np.isclose(beta, 0.3382, rtol=1e-3)
-        True
+    True
     """
 
     # sanity check
@@ -98,7 +99,7 @@ def normalShockRatio(gas: Gas,beta=np.pi/2):
 
 def normalShock(gas: Gas,beta=np.pi/2):
     Ma2,p2p1,rho2rho1,T2T1 = normalShockRatio(gas,beta=beta)
-    dict2={
+    newGasDict={
         "Ma": Ma2,
         "gamma": gas.gamma,
         "R":gas.R,
@@ -107,7 +108,7 @@ def normalShock(gas: Gas,beta=np.pi/2):
         "p": gas.p*p2p1, 
         "n" : gas.n
     }
-    return Gas(dict2)
+    return Gas(newGasDict)
 
 if __name__=="__main__":
 

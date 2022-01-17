@@ -1,6 +1,6 @@
 %set env for matlab scripts
 
-%% add function folder to path
+%% add folders to path
 addpath ("functions");
 addpath("teoApprox");
 addpath("ReEntry");
