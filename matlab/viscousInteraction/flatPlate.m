@@ -1,23 +1,23 @@
 % flate plate hypersonic boundary layer using viscous interaction theory
-clc;clear;close all
+clc;clear;close all;
+
 %flow data
 gas.gamma=1.4;
 gas.n=5;
-gas.T=235;
-gas.Taw=2143;
-gas.v=1840;
-gas.p=574;
-gas.rho=8.46e-3;
+gas.T=235; %[K]
+gas.Taw=2143; %[K]
+gas.v=1840; %[m/s]
+gas.p=574; %[N/m^2] 
+gas.rho=8.46e-3; %[kg/m^3]
 gas.R=287.5;
 gas.cp=gas.gamma*gas.R/(gas.gamma-1);
-
-gas.T0=(gas.cp*gas.T + (gas.v*2)/2)/gas.cp;
+gas.T0=(gas.cp*gas.T + (gas.v*2)/2)/gas.cp; %[K]
 
 M=5.97;
 Re_inf=9.87e5;
 
 %plate data
-L=1;
+L=1; %[m]
 x=linspace(0,L,80);
 T_w=gas.Taw;
 
@@ -28,29 +28,77 @@ Re_x=(Re_inf/L).*x; % Rxe/Re_inf=x/L
 Chi=(M^3)*(C_w./Re_x).^0.5; % Chi is singular at zero
 
 %viscous interaction loop
-[p_ratio,delta_star]=viscousInteraction(Chi,x,M,T_w,gas,"tangent_wedge");
+[p_ratio_hot,delta_star_hot]=viscousInteraction(Chi,x,M,T_w,gas,"tangent_wedge"); %hot wall
 
-[p_ratio1,delta_star1]=viscousInteraction(Chi,x,M,T_w,gas,"shock_expansion");
+[p_ratio1_hot,delta_star1_hot]=viscousInteraction(Chi,x,M,T_w,gas,"shock_expansion"); %hot wall
 
-% calc skin friction coefficient you, must use Ve
-% suppose Te=T_inf=cost
-Ve=(0.5*(gas.v^2 + gas.R*gas.T*log(p_ratio1))).^.5;
-Ve(1)=Ve(2);
-Re_x=Re_x.*([Ve,Ve(end)]/gas.v);
+[p_ratio_cold,delta_star_cold]=viscousInteraction(Chi,x,M,gas.T,gas,"tangent_wedge"); %cold wall
 
-cf=0.664*(Tratio(M,gas,T_w)^(-1/3))./(Re_x.^0.5); %adjust cf calulation, see pag, 344
+p_ratio_a_hot=pRatioAnalytic(gas,Chi,T_w); % p_ratio analytic
+
+%calc skin friction coefficient
+cf=skinFriction(gas,p_ratio1_hot,Re_x,M,T_w); %hot wall
+cf_cold=skinFriction(gas,p_ratio_cold,Re_x,M,gas.T); %cold wall
 
 % calc drag coefficient
-cd=trapz(x,[cf(2),cf(2:end)])/L
+cd_hot=trapz(x,[cf(2),cf(2:end)])/L %hot wall
+cd_cold=trapz(x,[cf_cold(2),cf_cold(2:end)])/L %cold wall 
 
 %% plotting
 
-plot(x,[delta_star,NaN])
+%plot deltaStar distribution T_w=T_aw
+plot(x,[delta_star_hot,NaN])
+xlabel("x")
+ylabel("\\delta^*")
+grid()
 
+%plot pressure distribution
 figure()
-plot(x,[p_ratio,NaN])
+plot(x,[p_ratio_hot,NaN],"displayname","numerical method")
+hold on
+plot(x,p_ratio_a_hot,"-.","displayname","analytical method")
+xlabel("x")
+ylabel("p/p_\\infty")
+legend()
+grid()
+
+%plot skin friction distribution
 figure()
 plot(x,cf)
 ylabel("c_f")
+xlabel("x")
+grid()
+
+% plot viscous interaction parameter
 figure()
 plot(x,Chi)
+xlabel("x")
+ylabel("\\chi")
+grid()
+
+%plot comparison deltaStar
+figure()
+plot(x,[delta_star_hot,NaN],"-;T_w=T_{aw};")
+hold on
+plot(x,[delta_star_cold,NaN],"-.;T_w=T_{\\infty};")
+xlabel("x")
+ylabel("\\delta^*")
+grid()
+
+%plot comparison p ratio
+figure()
+plot(x,[p_ratio_hot,NaN],"-;T_w=T_{aw};")
+hold on 
+plot(x,[p_ratio_cold,NaN],"-.;T_w=T_{\\infty};")
+xlabel("x")
+ylabel("p/p_\\infty")
+grid()
+
+%plot comparison cf
+figure()
+plot(x,cf,"-;T_w=T_{aw};")
+hold on 
+plot(x,cf_cold,"-.;T_w=T_{\\infty};")
+xlabel("x")
+ylabel("c_f")
+grid()
