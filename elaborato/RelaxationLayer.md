@@ -19,6 +19,7 @@ $$Da=\frac{\text{transport time species}}
 {\text{chemical reaction time}}=\frac{t_m}{t_r}$$
 
 and we can define 3 limiting cases:
+
 - $Da<<1$, frozen gas
 - $Da\simeq 1$, non equilibbrium
 - $Da>>1$, istantaneous equilibrium
@@ -28,6 +29,7 @@ path thick, the gas can be considered in a frozen state, thus the Rankine-Hugono
 equations do apply.  
 Then the gas evolves towards equilibrium.  
 When the gas is air whe should account for th following processes that take place in the flow field:
+
 - exitation of vibrational state of $N_2$
 - dissociation of $O_2$, $N_2$, and subsequent formation of atomic oxigen, nitrogen
 and $NO$ 

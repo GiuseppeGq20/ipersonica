@@ -182,7 +182,7 @@ def calcThermoQuantities(v: np.ndarray,gas: fl.Gas):
 
     return T/T[0],p_p0/p_p0[0],rho_rho0/rho_rho0[0]
 
-def cpCone(M: list,deltac,gas:fl.Gas):
+def cpCone(M: list,deltac: float, gas:fl.Gas):
     cp=[]
     gas_temp=copy.deepcopy(gas)
 
@@ -332,82 +332,5 @@ if __name__ == "__main__":
     "rho":0.129,
     "p": 0.1*101325, 
     "n" : 5}
-
-    air = fl.Gas(dict_air)
-
-    beta = np.arcsin(1.2/Ma)
-
-
-    w,V = solveTaylorMaccoll(beta,air)
-    Mw=V[1]
-    Mr=V[0]
-    q=calcThermoQuantities(V,air)
-    for value in q:
-        plt.plot(w,value)
-        plt.show()
-
-    deltac=np.deg2rad(15)
-    beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.8*beta_0
-    # beta_0=np.deg2rad(np.pi/3) ; beta_1=np.deg2rad(np.pi/4) # with this it converges to the strong solution
-    betac=betaCone(deltac,beta_0,beta_1,air)
-
-    w,Ma = solveTaylorMaccoll(betac,air)
-    Mw=Ma[1]
-    Mr=Ma[0]
-    print("beta = ", np.rad2deg(betac))
-
-    print(f"Ma = {air.Ma}  theta= {np.rad2deg(w[-1])}")
-    # print(f"beta2D= {np.rad2deg(beta2D)} \n betaCone= {np.rad2deg(beta)}")
-
-    fig, ax1 = plt.subplots()
-    ax1.plot(np.rad2deg(w), Mw)
-    ax1.set_title(r"grafico $\omega$ - $Ma_{\omega}$")
-    ax1.set_ylabel(r"$Ma_{\omega}$")
-    ax1.set_xlabel(r"$\omega$")
-    ax1.grid()
-
-    fig, ax2 = plt.subplots()
-    ax2.plot(np.rad2deg(w), Mr)
-    ax2.set_title(r"grafico $\omega$ - $Ma_{r}$")
-    ax2.set_ylabel(r"$Ma_{r}$")
-    ax2.set_xlabel(r"$\omega$")
-    ax2.grid()
-    plt.show()
-
-
-    # delta equivalent
-    deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
-    phi = np.linspace(0, 2*np.pi,10)
-    deltaEq= deltaLocalCone(deltaC,alpha,phi)
-
-    deltaE=deltaLocalCone(deltaC,alpha,phi=np.pi/2)
-    
-    #cp High
-    Mach=10.0
-    deltaC= np.deg2rad(10); alpha=np.deg2rad(5)
-    phi=np.linspace(0,2*np.pi,50)
-    cpH=cpHigh(deltaC,alpha,Mach, phi=phi)
-    plt.plot(np.rad2deg(phi),cpH);  plt.show()
-
-    cl,cd= calcCLCdCone(deltaC,alpha,phi,cpH)
-    print(f"cl = {cl}\ncd = {cd}\n")
-
-    x=np.linspace(0,np.pi/2,50)
-    Mach = 25 - (25 - 1.1)* np.cos(x)
-
-    air=fl.Gas(dict_air)
-    delta,_=calcMaxDelta(air)
-    delta,beta=calcMaxDelta(air,Mach=Mach)
-    delta=np.rad2deg(delta)
-    beta=np.rad2deg(beta)
-
-    plt.plot(Mach,delta,"k-",label=r"$\delta_{max}$")
-
-    plt.plot(Mach,beta,"b-.",label=r"$\beta$")
-    plt.legend()
-    plt.grid()
-    plt.xlabel(r"$M_\infty$")
-    plt.show()
-    
 
 # %%
