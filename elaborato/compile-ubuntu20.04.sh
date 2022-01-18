@@ -20,10 +20,10 @@ done
 
 if [ "$format" = "html" ]
 then
-pandoc $filename -f markdown+tex_math_dollars --citeproc --katex=$url -t html5 -s -o ${outfile}".html"
+pandoc $filename -f markdown+tex_math_dollars --filter pandoc-fignos --citeproc --katex=$url -t html5 -s -o ${outfile}".html"
 elif [ "$format" = "pdf" ]
 then
-pandoc $filename -f markdown+tex_math_dollars -H $disable_float --citeproc -t pdf  --pdf-engine=pdflatex  -s -o ${outfile}".pdf";
+pandoc $filename -f markdown+tex_math_dollars -H $disable_float --filter pandoc-fignos --citeproc -t pdf  --pdf-engine=pdflatex  -s -o ${outfile}".pdf";
 else
 echo "wrong format"
 fi

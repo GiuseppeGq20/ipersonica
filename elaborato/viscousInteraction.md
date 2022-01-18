@@ -91,8 +91,8 @@ The boundary layer of the flat plate has been solved for the following free stre
 
 These represent the thermofluid dynamic conditions of the re-entry of the mercury
 capsule at 35 Km of altitude.  
-In fiq. (1) we can appreciate the difference in $\delta^*$ distribution between a 
-cold and a flat plate, and subsequently the difference in pressure ratio (fig. (2)).  
+In fiq. {@fig:delta} we can appreciate the difference in $\delta^*$ distribution between a 
+cold and a flat plate, and subsequently the difference in pressure ratio (fig. {@fig:pratio}).  
 We can see that the hot plate induce a more pronounced variation of the apparent
 geometry with respect to the cold plate, thus the pressure ratio is greater along the
 plate.  
@@ -103,18 +103,18 @@ We can also see that the profiles of $\delta^*$ and $\frac{p}{p_\infty}$ are not
 plotted at $x=0$ because there is a singularity in the viscous interaction method.
 However, at $x=0$, $\delta^* = 0$ and $\frac{p}{p_\infty}$ is singular.
 
-![$delta^*$ distribution](images/viscousInteraction/deltaComparison.jpg){width=80%}
+![apparent thickness distribution](images/viscousInteraction/deltaComparison.jpg){#fig:delta width=80%}
 
-![pressure ratio distribution](images/viscousInteraction/pRatio.jpg){width=80%}
+![pressure ratio distribution](images/viscousInteraction/pRatio.jpg){#fig:pratio width=80%}
 
-In fig. (3) we can see the skin friction distribution comparison between hot and
+In fig. {@fig:cf} we can see the skin friction distribution comparison between hot and
 cold plate, and because the $c_f$ of the cold plate is point wise greater than the $c_f$ of the hot plate, it has also a greater drag coefficient $c_d$. In fact,
 $c_{d,hot}=7.92\times10^{-4}$ and $c_{d,cold}=11.66\times10^{-4}$.
 
-![skin friction distribution](images/viscousInteraction/cfComparison.jpg){witdth=80%}
+![skin friction distribution](images/viscousInteraction/cfComparison.jpg){#fig:cf width=80%}
 
-In fig. (4) the $\chi$ distribution of the hot plate is plotted, and we can state that the viscous
+In fig. {@fig:chi} the $\chi$ distribution of the hot plate is plotted, and we can state that the viscous
 interaction is of the weak type ($\chi\simeq 1$), except for the leading edge of the plate.
 
-![viscous interaction parameter distribution](images/viscousInteraction/chiDistribution.jpg){width=80%}
+![viscous interaction parameter distribution](images/viscousInteraction/chiDistribution.jpg){#fig:chi width=80%}
 

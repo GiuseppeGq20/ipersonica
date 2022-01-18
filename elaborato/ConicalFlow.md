@@ -7,6 +7,7 @@ author: "Giuseppe Giaquinto"
 ## Taylor Maccoll equation
 
 Let us consider the flowfield of a supersonic cone. If we assume that:
+
 - the flow is non viscous, nor reacting
 - the flowfield is completely supersonic
 - the cone shock wave is attached
@@ -41,12 +42,12 @@ adopted:
 1) Integrate the Taylor Maccoll equations with an appropriate ODE solver, starting
 from a given shock angle $\beta$, and stop the integration when $v_w=0$, the $\omega$
 angle at which $v_w=0$ is the cone angle $\delta_c$ that realizes that shock angle$\beta$ 
-
 2) Then we can use a root-finding algorithm on the error function: 
    $$
    e(\beta)= \omega_{fin}(\beta)-\delta_c
    $$
    The $\beta$ obtained is the shock angle for the specified cone, with $\delta_c$.
+
 
 >**note**: the implementation in the code is with a secant method, varying the initialization
 of the algorithm we can get the strong or the weak solution for the shock angle,
@@ -65,12 +66,53 @@ We can adopt the following strategy to find it:
 3) Solve the Taylor-Maccoll equation with $\beta$ calculated at the preceding step, 
 from the solution we get $\delta_{c,max}$
 
-## Thermofluid dynamic propertis of the supersonic cone at different free stream Mach numbers
+In fig. {@fig:betadelta} we can see a plot of the results.
 
+![$\delta{max}$ and $\beta$ angles distribution with respect to $M_\infty$](images/conicalFlow/Mach/betadeltamax.png){#fig:betadelta width=80%}
+
+## Mach number independence
+
+If we consider a supersonic cone, for sufficiently large free stream Mach number
+$M_\infty$ some thermofluid dynamic properties of the flow are not influenced by it,
+in essence we can consider valid the hypersonic limit relations.
+This effect is demonstrated on the pressure coefficient of the supersonic cone in
+fig. {@fig:cpM, where we can see that its value doesn't depend on $M_\infty$ but only from
+$\delta_c$ cone angle.
+
+![$c_p$ of the cone with respect to $M_\infty$](images/conicalFlow/Mach/cp.jpeg){#fig:cpM width=80%}
 
 ## Comparison: wedge and cone flow
+We can compare the thermofluid dynamic properties of the downstream flows past a 
+wedge and a cone that impose the same flow deviation $\delta = 10 [deg]$ and free
+stream Mach number $M_\infty = 10$.  
+The properties of the free stream air, used for the subsequent simulation, are reported in the following table:
 
+|||
+|---|---|
+|$M_\infty$| 10|
+|$\gamma$| 1.4|
+|R|287.05|
+|T [K]|273.0|
+|$\rho$ [kg/m^3]|0.129|
+|P [Pa]| 10132.5| 
+|n | 5|
 
+We can appreciate the different velocity, Mach, Temperature, Pressure, density 
+distribution, along the $\omega$ angle up to the cone/wedge, from fig. {@fig:v} to {@fig:rho}.  
+We can state that overall for fixed $\delta$
+and $M_\infty$ the wedge shock is stronger than the cone shock.
+
+![Velocity distribution](images/conicalFlow/coneWedge/v.jpeg){#fig:v width=70%}
+
+![Mach number distribution](images/conicalFlow/coneWedge/mach.png){#fig:M width=70%}
+
+![Temperature distribution](images/conicalFlow/coneWedge/T.png){#fig:T width=70%}
+
+![Pressure distribution](images/conicalFlow/coneWedge/p.jpeg){#fig:P width=70%}
+
+![Density distribution](images/conicalFlow/coneWedge/rho.png){#fig:rho width=70%}
+
+<!-- commented out some of the paper that was out of context  
 ## aerodynamic coefficients
 
 We can calculate the $c_p$ distribution of a supersonic cone. Because of the genesis of these methods, the $c_p$ 
@@ -113,4 +155,4 @@ C_d&= C_{F_x}\cos(\alpha) + C_{F_y}\sin(\alpha) \\
 C_l&= -C_{F_x}\sin(\alpha) + C_{F_y}\cos(\alpha)\\
 \end{aligned}
 $$
-
+-->
