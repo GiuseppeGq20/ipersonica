@@ -111,7 +111,7 @@ $$
 > to the conclusion that also G is a multivariate Gaussian distribution in which 
 > the correlation terms in the variance matrix are equal to zero. 
 
-### speed distribution
+### Speed distribution
 
 Now we ask what is the distribution function $f$ of molecules, in thermal equilibrium, 
 moving between speed $\mathbf v$ and $\mathbf v + d\mathbf v$, (now we are not 
@@ -338,7 +338,7 @@ S&=-k_B\sum_i P_i \ln P_i
 \end{aligned}
 $$
 
-# NOTE
+## NOTE
 
 ### **Thermal equilibrium**
 
