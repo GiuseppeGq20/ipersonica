@@ -157,6 +157,44 @@ def calcMaxDelta(Gas: fl.Gas,Mach:np.ndarray = None)-> tuple:
     
     return delta, beta
 
+def calcThermoQuantities(v: np.ndarray,gas: fl.Gas):
+    """
+    calc thermodynamic quantities in the shock layer of a supersonic cone given
+    velocity field  
+    
+    Parameters:
+        - gas: gas like object
+        - v: velocity array in the shock layer
+    
+    Return:
+        - T_T2: temperature ratio, referred to the temperature downstream the shock
+        - p_p2: pressure ratio, referred to the pressure downstream the shock
+        - rho_rho2: density ratio, referred to the density downstream the shock
+    """
+    modv=np.sqrt(v[1]**2 + v[0]**2)
+    T=gas.T0*((1 + (modv**2)/(2*gas.cp))**-1)
+    a=np.sqrt(gas.gamma*gas.R*T)
+    M=modv/a
+    _,p_p0,rho_rho0=fl.isentropicFlow(M,gas) # to get p_p1 and rho_rho1,just divide by the first element
+
+    return T/T[0],p_p0/p_p0[0],rho_rho0/rho_rho0[0]
+
+def cpCone(M: list,deltac,gas:fl.Gas):
+    cp=[]
+    gas_temp=copy.deepcopy(gas)
+
+    for mach in M:
+        gas_temp.Ma=mach
+        gas_temp.update()
+        beta_0=fl.obliqueShock(deltac,gas_temp) ; beta_1=0.8*beta_0 #extremely experimental
+        beta=betaCone(deltac,beta_0,beta_1,gas_temp)
+        _,p2_p1,_,_=fl.normalShockRatio(gas_temp,beta=beta)
+        _,v=solveTaylorMaccoll(beta,gas_temp)
+        _,pc_p2,_=calcThermoQuantities(v,gas_temp)
+        cp.append((2/(gas_temp.gamma* gas_temp.Ma**2))*(p2_p1*pc_p2[-1] -1))
+    
+    return np.array(cp)
+
 def deltaLocalCone(deltaC: float, alpha: float, phi: np.ndarray) -> np.ndarray:
     """
     Calc equivalent cone semi aperture for the local cone method
@@ -184,6 +222,7 @@ def deltaLocalCone(deltaC: float, alpha: float, phi: np.ndarray) -> np.ndarray:
             )
     return deltaEq
 
+#BUG cpHigh doesn't work
 def cpHigh(deltaC: float, alpha:float, Ma: float, phi: np.ndarray) -> np.ndarray:
 
     """
@@ -298,7 +337,10 @@ if __name__ == "__main__":
     w,V = solveTaylorMaccoll(beta,air)
     Mw=V[1]
     Mr=V[0]
-
+    q=calcThermoQuantities(V,air)
+    for value in q:
+        plt.plot(w,value)
+        plt.show()
     deltac=np.deg2rad(15)
     beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.8*beta_0
     # beta_0=np.deg2rad(np.pi/3) ; beta_1=np.deg2rad(np.pi/4) # with this it converges to the strong solution
@@ -354,11 +396,11 @@ if __name__ == "__main__":
     delta=np.rad2deg(delta)
     beta=np.rad2deg(beta)
 
-    plt.plot(Mach,delta,"k-",label=r"$\delta$")
+    plt.plot(Mach,delta,"k-",label=r"$\delta_{max}$")
     plt.plot(Mach,beta,"b-.",label=r"$\beta$")
     plt.legend()
     plt.grid()
-    plt.xlabel("Ma")
+    plt.xlabel(r"$M_\infty$")
     plt.show()
     
 

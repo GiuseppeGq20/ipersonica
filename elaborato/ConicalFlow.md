@@ -11,6 +11,7 @@ Let us consider the flowfield of a supersonic cone. If we assume that:
 - the flowfield is completely supersonic
 - the cone shock wave is attached
 - the cone has zero angle of attack $\alpha$
+
 We can simplify the Euler equations, by expressing them in the spherical reference frame
 originating from the cone. In fact, in these settings, for the symmetry of the problem
 the shock wave is conical and concentric to the cone, so that the flow is homoentropic
@@ -64,10 +65,15 @@ We can adopt the following strategy to find it:
 3) Solve the Taylor-Maccoll equation with $\beta$ calculated at the preceding step, 
 from the solution we get $\delta_{c,max}$
 
+## Thermofluid dynamic propertis of the supersonic cone at different free stream Mach numbers
+
+
+## Comparison: wedge and cone flow
+
+
 ## aerodynamic coefficients
 
-We can calculate the $\c_p$ distribution of a pitched cone by using local cone
-method and the High method. Because of the genesis of these methods, the $c_p$ 
+We can calculate the $c_p$ distribution of a supersonic cone. Because of the genesis of these methods, the $c_p$ 
 distribution depend only on the $\phi$ coordinate, with this observation we can
 express the aerodynamic force divided by the free stream dynamic pressure:
 $$
@@ -82,19 +88,19 @@ The $x$ axis coincide with the cone axis and so the force for unit dynamic press
 $F_x$ is given by eq. (2).  
 To get the force for unit dynamic pressure along the $y$ axis we must project
 the radial aerodynamic force onto the $y$ axis thus, obtaining eq. (3).
-The reference area is the lateral surface of the cone
+The reference area of the base of the cone
 $$
-C_{F_x}= \frac {F_{x}}{ \frac {\pi R^2}{\sin(\delta_c)}} = 
-\frac {\sin(\delta_c)}{2\pi} \int_0^{2\pi} c_pd\phi \tag {2}
+C_{F_x}= \frac {F_{x}}{\pi R^2} = 
+\frac {1}{2\pi} \int_0^{2\pi} c_pd\phi \tag {2}
 $$
 
 $$
-C_{F_y}= \frac {F_{y}}{ \frac {\pi R^2}{\sin(\delta_c)}} = 
-\frac {\cos(\delta_c)}{2\pi} \int_0^{2\pi} c_p\cos(\phi)d\phi
+C_{F_y}= \frac {F_{y}}{ \pi R^2} = 
+\frac {1}{2\pi \tan(\delta_c)} \int_0^{2\pi} c_p\cos(\phi)d\phi
 \tag{3}
 $$
 
-These two finite integrals can be numerically evaluated once the $c_p$ distribution
+These two integrals can be numerically evaluated once the $c_p$ distribution
 is known.
 
 ### $C_l$ e $C_d$ calculation

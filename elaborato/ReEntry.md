@@ -1,3 +1,8 @@
+---
+title: "Atmospheric re-entry"
+author: "Giuseppe Giaquinto"
+---
+
 # Atmospheric re-entry
 
 ## equation of motion
