@@ -3,6 +3,7 @@ from: markdown+tex_math_dollars
 to: pdf
 
 pdf-engine: pdflatex
+
 include-in-header: disable_float.tex
 
 # leave blank for output to stdout:
@@ -16,6 +17,14 @@ input-files:
 # template: letter
 standalone: true
 self-contained: true
+
+variables:
+  geometry:
+    - layout=a4paper
+    - top=30mm
+    - left=30mm
+    - right=30mm
+    - heightrounded
 
 # metadata values specified here are parsed as literal
 # string text, not markdown:
