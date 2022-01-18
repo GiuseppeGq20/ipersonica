@@ -47,7 +47,7 @@ for i=1:length(gamma)
    
     Legend{i}=strcat("\gamma=",num2str(gamma(i)),"°");
 end
-Legend{length(gamma)+1}='numeric';
+Legend{length(gamma)+1}='numeric 4°';
 
 %plotting
 figure(2)

@@ -1,11 +1,12 @@
 %% Esercitazione teorie approssimate profilo
 
 clear all; clc; close all;
-%condizioni moto
+%flow conditions
 Ma=8;
 alpha= deg2rad(8); % angolo d' attacco
 n=5; % dof gas
 gamma=1.4;
+
 %% geometria
 %profilo starfighter
 c=1;

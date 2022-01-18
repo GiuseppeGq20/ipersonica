@@ -49,7 +49,7 @@ cd_cold=trapz(x,[cf_cold(2),cf_cold(2:end)])/L %cold wall
 %plot deltaStar distribution T_w=T_aw
 plot(x,[delta_star_hot,NaN])
 xlabel("x")
-ylabel("\\delta^*")
+ylabel("\delta^*")
 grid()
 
 %plot pressure distribution
@@ -58,7 +58,7 @@ plot(x,[p_ratio_hot,NaN],"displayname","numerical method")
 hold on
 plot(x,p_ratio_a_hot,"-.","displayname","analytical method")
 xlabel("x")
-ylabel("p/p_\\infty")
+ylabel("p/p_\infty")
 legend()
 grid()
 
@@ -73,32 +73,36 @@ grid()
 figure()
 plot(x,Chi)
 xlabel("x")
-ylabel("\\chi")
+ylabel("\chi")
 grid()
 
 %plot comparison deltaStar
+labels={'T_w=T_{aw}','T_w=T_{\infty}'};
 figure()
-plot(x,[delta_star_hot,NaN],"-;T_w=T_{aw};")
+plot(x,[delta_star_hot,NaN],"-")
 hold on
-plot(x,[delta_star_cold,NaN],"-.;T_w=T_{\\infty};")
+plot(x,[delta_star_cold,NaN],"-.")
 xlabel("x")
-ylabel("\\delta^*")
+ylabel("\delta^*")
+legend(labels)
 grid()
 
 %plot comparison p ratio
 figure()
-plot(x,[p_ratio_hot,NaN],"-;T_w=T_{aw};")
+plot(x,[p_ratio_hot,NaN],"-")
 hold on 
-plot(x,[p_ratio_cold,NaN],"-.;T_w=T_{\\infty};")
+plot(x,[p_ratio_cold,NaN],"-.")
 xlabel("x")
-ylabel("p/p_\\infty")
+ylabel("p/p_\infty")
+legend(labels)
 grid()
 
 %plot comparison cf
 figure()
-plot(x,cf,"-;T_w=T_{aw};")
+plot(x,cf,"-")
 hold on 
-plot(x,cf_cold,"-.;T_w=T_{\\infty};")
+plot(x,cf_cold,"-.")
 xlabel("x")
 ylabel("c_f")
+legend(labels)
 grid()
