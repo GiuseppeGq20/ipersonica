@@ -1,4 +1,3 @@
-from xxlimited import new
 import numpy as np
 from scipy.optimize import root_scalar
 # try do define an interface for Gas class
