@@ -149,9 +149,9 @@ the following profiles of the thermo-fluidynamic quantities are obtained
 
 ![pressure profile at 45km](./images/45km/p.png){#fig: width=80%}
 
-![temperature profile at 45km](./images/45km/T.png){width=80%}
+![temperature profile at 45km](./images/45km/T.png){#fig: width=80%}
 
-![density profile at 45km](./images/45km/rho.png){width=80%}
+![density profile at 45km](./images/45km/rho.png){#fig: width=80%}
 
 ### Note
 > the fact that vibrational d.o.f equilibrium is systematically reached before the
