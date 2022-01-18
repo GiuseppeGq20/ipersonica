@@ -9,3 +9,4 @@ octave-workspace
 *.pdf
 *.html
 *.asv
+log.json
