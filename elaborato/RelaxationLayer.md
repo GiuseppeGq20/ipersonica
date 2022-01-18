@@ -19,6 +19,7 @@ $$Da=\frac{\text{transport time species}}
 {\text{chemical reaction time}}=\frac{t_m}{t_r}$$
 
 and we can define 3 limiting cases:
+
 - $Da<<1$, frozen gas
 - $Da\simeq 1$, non equilibbrium
 - $Da>>1$, istantaneous equilibrium
@@ -28,6 +29,7 @@ path thick, the gas can be considered in a frozen state, thus the Rankine-Hugono
 equations do apply.  
 Then the gas evolves towards equilibrium.  
 When the gas is air whe should account for th following processes that take place in the flow field:
+
 - exitation of vibrational state of $N_2$
 - dissociation of $O_2$, $N_2$, and subsequent formation of atomic oxigen, nitrogen
 and $NO$ 
@@ -149,9 +151,9 @@ the following profiles of the thermo-fluidynamic quantities are obtained
 
 ![pressure profile at 45km](./images/45km/p.png){#fig: width=80%}
 
-![temperature profile at 45km](./images/45km/T.png){width=80%}
+![temperature profile at 45km](./images/45km/T.png){#fig: width=80%}
 
-![density profile at 45km](./images/45km/rho.png){width=80%}
+![density profile at 45km](./images/45km/rho.png){#fig: width=80%}
 
 ### Note
 > the fact that vibrational d.o.f equilibrium is systematically reached before the
