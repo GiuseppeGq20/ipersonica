@@ -6,6 +6,7 @@ from scipy.optimize import root_scalar
 import flows as fl
 import copy
 
+
 def _TaylorMaccoll(w, y, gas):
 
     v_r, v_w = y  # unpack variables
@@ -33,7 +34,9 @@ def solveTaylorMaccoll(beta: float, gas: fl.Gas):
     if beta <0: 
         raise RuntimeError("beta must be positive")
 
+
     # calc shock relation needed
+
     Mn2,p2p1,rho2rho1,T2T1 = fl.normalShockRatio(gas,beta=beta)
     a2=gas.a*np.sqrt(T2T1)
     Vlim=(2*gas.H)**0.5
@@ -334,6 +337,7 @@ if __name__ == "__main__":
 
     beta = np.arcsin(1.2/Ma)
 
+
     w,V = solveTaylorMaccoll(beta,air)
     Mw=V[1]
     Mr=V[0]
@@ -341,6 +345,7 @@ if __name__ == "__main__":
     for value in q:
         plt.plot(w,value)
         plt.show()
+
     deltac=np.deg2rad(15)
     beta_0=fl.obliqueShock(deltac,air) ; beta_1=0.8*beta_0
     # beta_0=np.deg2rad(np.pi/3) ; beta_1=np.deg2rad(np.pi/4) # with this it converges to the strong solution
@@ -397,6 +402,7 @@ if __name__ == "__main__":
     beta=np.rad2deg(beta)
 
     plt.plot(Mach,delta,"k-",label=r"$\delta_{max}$")
+
     plt.plot(Mach,beta,"b-.",label=r"$\beta$")
     plt.legend()
     plt.grid()
