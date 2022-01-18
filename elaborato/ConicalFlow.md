@@ -1,82 +1,158 @@
+---
+title: "Conical Flow"
+author: "Giuseppe Giaquinto"
+---
 # Conical Flow
 
-## Equazione di Taylor Maccoll
+## Taylor Maccoll equation
 
-Studiando il problema del campo di moto inviscido attorno ad un cono a zero angolo d' attacco posto in una corrente a numero di Mach asintotico $Ma_{\infty}$  con onda d'urto attaccata al cono si giunge ad un problema differenziale ordinario del secondo ordine non lineare che è espresso dal  sistema di equazioni di Taylor Maccoll, in cui $v_r$ e $v_\omega$ sono le componenti della velocitá adimensionalizzate rispetto a $V_{lim} = \sqrt{2H}$ e $C= \frac {\gamma-1} 2 (1 - v_r^2 - v_\omega^2)$ .
+Let us consider the flowfield of a supersonic cone. If we assume that:
+
+- the flow is non viscous, nor reacting
+- the flowfield is completely supersonic
+- the cone shock wave is attached
+- the cone has zero angle of attack $\alpha$
+
+We can simplify the Euler equations, by expressing them in the spherical reference frame
+originating from the cone. In fact, in these settings, for the symmetry of the problem
+the shock wave is conical and concentric to the cone, so that the flow is homoentropic
+and thus the flow field doesn't depend on the azimuth angle and the velocity in that
+direction is null. Furthermore, the thermofluid dynamic properties of the flow 
+don't depend on the radial coordinate.
+So we obtain the Taylor-Maccoll equations: 
 $$
-\begin{align}
+\begin{aligned}
 \frac{dv_r}{d\omega}&= v_w\\
 \frac{dv_\omega}{d\omega}&=\frac 1 {C - 2v_\omega²}[2v_w v_r \frac{dv_r}{d\omega} -C(2v_r + v_\omega\cot(\omega))]\\
-
-\end{align}
+\end{aligned}
 $$
-Questa equazioni possono essere integrate numericamente per ottenere le componenti di velocità $v_r (\omega)$ e $v_\omega (\omega)$ ,  nel codice la risoluzione di tali equazioni è implementata nella funzione `SolveTaylorMaccol() ` . La particolarità di questo sistema di equazioni sono le condizioni al contorno. Infatti per l'integrazione del sistema bisogna conoscere la velocità a valle dell'urto . Ma l' angolo d'urto è esso stesso incognito.
+Where $v_r$ and $v_\omega$ are the velocity components divided by $V_{lim} = \sqrt{2H}$ and
+$C= \frac {\gamma-1} 2 (1 - v_r^2 - v_\omega^2)$.  
+This set of equation can be numerically solved but the peculiar aspect of it are
+the boundary conditions: to integrate this system we must know the velocity components
+$v_r (\omega)$ and $v_\omega (\omega)$, after the shock but that shock
+angle is unknown. This lead to a iterative procedure to find 
+the appropriate shock angle for a given cone.
 
-### Strategia risolutiva
+### Numerical procedure
 
-Per risolvere il problema si puó adottare il seguente schema risolutivo:
+To solve the Taylor Maccoll equation the following numerical procedure can be 
+adopted:
 
-1) si integra il sistema di Taylor Maccoll con un opportuno solutore di ODE supponendo noto l'angolo d'urto $\beta$ e l'integrazione si ferma al soddisfacimento della condizione $v_w=0$ , ovvero la condizione di tangenza della corrente sul corpo. Ovviamente l'angolo $\omega_{fin}$ per cui si ha  $v_w=0$ non coincide con l'angolo $\delta_c$ del cono.
-   Nel codice tale routine é implementata nella funzione `SolveTaylorMaccol()`
-
-2) Si può a questo punto utilizzare un algoritmo di root-finding sulla funzione errore:
+1) Integrate the Taylor Maccoll equations with an appropriate ODE solver, starting
+from a given shock angle $\beta$, and stop the integration when $v_w=0$, the $\omega$
+angle at which $v_w=0$ is the cone angle $\delta_c$ that realizes that shock angle$\beta$ 
+2) Then we can use a root-finding algorithm on the error function: 
    $$
    e(\beta)= \omega_{fin}(\beta)-\delta_c
    $$
-   l'angolo $\beta$ cosí ottenuto é l'angolo dell'onda d'urto conica.
-   Nel codice questo é implementato con un metodo delle secanti nella funzione `betaCone()`, al variare dell'inizializzazione dell' algoritmo si possono ottenere la soluzione forte o debole dell'urto.
+   The $\beta$ obtained is the shock angle for the specified cone, with $\delta_c$.
 
-   
 
-## massimo angolo di semiapertura del cono a fissato $Ma_\infty$
+>**note**: the implementation in the code is with a secant method, varying the initialization
+of the algorithm we can get the strong or the weak solution for the shock angle,
+however this method does not guarantee the convergence to the solution for any possible
+initialization
 
-Il massimo angolo di apertura del cono $\delta_c$ corrisponde a quell' angolo per cui il numero numero di mach a valle dell' onda d' urto è unitario. 
-Si può impostare la seguente strategia per risolvere questo problema:
 
-- definire la funzione $f(Ma_\infty , \beta) = M_2 -1$
-- trovare l' angolo $\beta$ per cui $f=0$ 
-- Integrare le equazioni di Taylor Maccoll, noti $\beta$ e $Ma_\infty$ , da cui si può ottenere $\delta_{c,max}$
+## maximum cone angle $\delta_c$ at fixed $Ma_\infty$
 
-## calcolo coefficienti aerodinamici
+The maximum cone angle $\delta_c$ is the angle that realize a Mach number equal to
+one downstream the shock.  
+We can adopt the following strategy to find it:
 
-Attraverso i metodo del cono locale e di High é possibile calcolare il $c_p$ sulla superficie del cono. Per la genesi di questi metodi, il $c_p$ e funzione solo dell'angolo $\phi$ , da questa osservazione si ha che la forza aerodinamica per unità di pressione dinamica é data dalla relazione $\ref{eq:Cp}$:
+1) Let us define the error function $f(Ma_\infty , \beta) = M_2 -1$
+2) find the angle $\beta$ such that $f=0$ 
+3) Solve the Taylor-Maccoll equation with $\beta$ calculated at the preceding step, 
+from the solution we get $\delta_{c,max}$
+
+In fig. {@fig:betadelta} we can see a plot of the results.
+
+![$\delta{max}$ and $\beta$ angles distribution with respect to $M_\infty$](images/conicalFlow/Mach/betadeltamax.png){#fig:betadelta width=80%}
+
+## Mach number independence
+
+If we consider a supersonic cone, for sufficiently large free stream Mach number
+$M_\infty$ some thermofluid dynamic properties of the flow are not influenced by it,
+in essence we can consider valid the hypersonic limit relations.
+This effect is demonstrated on the pressure coefficient of the supersonic cone in
+fig. {@fig:cpM, where we can see that its value doesn't depend on $M_\infty$ but only from
+$\delta_c$ cone angle.
+
+![$c_p$ of the cone with respect to $M_\infty$](images/conicalFlow/Mach/cp.jpeg){#fig:cpM width=80%}
+
+## Comparison: wedge and cone flow
+We can compare the thermofluid dynamic properties of the downstream flows past a 
+wedge and a cone that impose the same flow deviation $\delta = 10 [deg]$ and free
+stream Mach number $M_\infty = 10$.  
+The properties of the free stream air, used for the subsequent simulation, are reported in the following table:
+
+|||
+|---|---|
+|$M_\infty$| 10|
+|$\gamma$| 1.4|
+|R|287.05|
+|T [K]|273.0|
+|$\rho$ [kg/m^3]|0.129|
+|P [Pa]| 10132.5| 
+|n | 5|
+
+We can appreciate the different velocity, Mach, Temperature, Pressure, density 
+distribution, along the $\omega$ angle up to the cone/wedge, from fig. {@fig:v} to {@fig:rho}.  
+We can state that overall for fixed $\delta$
+and $M_\infty$ the wedge shock is stronger than the cone shock.
+
+![Velocity distribution](images/conicalFlow/coneWedge/v.jpeg){#fig:v width=70%}
+
+![Mach number distribution](images/conicalFlow/coneWedge/mach.png){#fig:M width=70%}
+
+![Temperature distribution](images/conicalFlow/coneWedge/T.png){#fig:T width=70%}
+
+![Pressure distribution](images/conicalFlow/coneWedge/p.jpeg){#fig:P width=70%}
+
+![Density distribution](images/conicalFlow/coneWedge/rho.png){#fig:rho width=70%}
+
+<!-- commented out some of the paper that was out of context  
+## aerodynamic coefficients
+
+We can calculate the $c_p$ distribution of a supersonic cone. Because of the genesis of these methods, the $c_p$ 
+distribution depend only on the $\phi$ coordinate, with this observation we can
+express the aerodynamic force divided by the free stream dynamic pressure:
 $$
-\frac F {q_\infty}= \int_0^R \int_0^{2\pi}  c_p(\phi) \frac r {sin(\delta_c)}drd\phi = \frac {R^2} {2 sin(\delta_c)} \int_0^{2\pi} c_p(\phi) d\phi 		\tag{1} \label{eq:Cp}
+\frac F {q_\infty}= \int_0^R \int_0^{2\pi}  c_p(\phi) \frac r {sin(\delta_c)}drd\phi = \frac {R^2} {2 sin(\delta_c)} \int_0^{2\pi} c_p(\phi) d\phi
+$$
+It is worth noting that these methods only give decent results for small angle of 
+attack
+
+### $C_{Fx}$ and ${C_{Fy}}$ calculation
+
+The $x$ axis coincide with the cone axis and so the force for unit dynamic pressure 
+$F_x$ is given by eq. (2).  
+To get the force for unit dynamic pressure along the $y$ axis we must project
+the radial aerodynamic force onto the $y$ axis thus, obtaining eq. (3).
+The reference area of the base of the cone
+$$
+C_{F_x}= \frac {F_{x}}{\pi R^2} = 
+\frac {1}{2\pi} \int_0^{2\pi} c_pd\phi \tag {2}
 $$
 
-### calcolo $C_{Fx}$ e ${C_{Fy}}$
-
-L' asse x coincide con l'asse del cono e dunque la forza per unitá di pressione dinamica lungo l'asse x,  $F_x$,  é data dalla relazione $\ref{Fx}$ .
-Per ottenere la forza per unitá di pressione dinamica lungo l'asse y , $F_y$, bisogna proiettare la forza aerodinamica radiale $F_R = Fcos(\delta_c)$ lungo l'asse y ottenendo la relazione $\ref{Fy}$.
 $$
-\begin{equation} \label{Fx} \tag{2}
-C_{F_x}= \frac {F_{x}}{ \frac {\pi R^2}{\sin(\delta_c)}} = \frac {\sin(\delta_c)}{2\pi} \int_0^{2\pi} c_pd\phi
-\end{equation}
+C_{F_y}= \frac {F_{y}}{ \pi R^2} = 
+\frac {1}{2\pi \tan(\delta_c)} \int_0^{2\pi} c_p\cos(\phi)d\phi
+\tag{3}
 $$
 
+These two integrals can be numerically evaluated once the $c_p$ distribution
+is known.
+
+### $C_l$ e $C_d$ calculation
+
+$C_l$ e $C_d$ can be evaluated with the following relations:
+
 $$
-\begin{equation} \label{Fy} \tag{3}
-C_{F_y}= \frac {F_{y}}{ \frac {\pi R^2}{\sin(\delta_c)}} = \frac {\cos(\delta_c)}{2\pi} \int_0^{2\pi} c_p\cos(\phi)d\phi
-\end{equation}
-$$
-
-
-Questi due integrali posso essere calcolati numericamente una volta nota la distribuzione di $c_p$. 
-
-### calcolo $C_l$ e $C_d$
-
-I coefficienti $C_l$ e $C_d$ sono calcolati attraverso la seguente trasformazione di rotazione di un angolo  pari all'angolo di attacco $\alpha$ :
-$$
-\begin{align}
+\begin{aligned}
 C_d&= C_{F_x}\cos(\alpha) + C_{F_y}\sin(\alpha) \\
 C_l&= -C_{F_x}\sin(\alpha) + C_{F_y}\cos(\alpha)\\
-\end{align}
+\end{aligned}
 $$
-  Il calcolo dei coefficienti aerodinamici é implementato nella funzione `calcClCdCone()`. Gli integrali che compaiono nell eqs. $\ref{Fx}$ e $\ref{Fy}$ sono calcolati attraverso una regola trapezoidale. 
-
-
-
-## NOTE da rimuovere
-
- Analitycal solution of the Taylor Maccol equations [@TaylorMaccollAnalytic]
-
+-->

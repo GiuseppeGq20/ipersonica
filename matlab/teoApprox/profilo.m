@@ -72,12 +72,12 @@ plot(x,cpDorsoN,'k-', 'DisplayName','Newton')
 hold on
 plot(x,cpDorsoB,'b-','DisplayName','Buseman')
 hold on
-plot(x,cpDorsoC,'r-.','DisplayName','Cono Tangente')
+plot(x,cpDorsoC,'r-.','DisplayName','Tangent wedge')
 hold on
-plot(x,cpDorsoUE,'g-.','linewidth',1,'DisplayName','Urto-espansione')
+plot(x,cpDorsoUE,'g-.','linewidth',1,'DisplayName','Shock-expansion')
 hold off
-title("C_p sul dorso del profilo")
-xlabel("x") 
+title("upper surface C_p")
+xlabel("x/c") 
 ylabel("C_p")
 legend
 grid on
@@ -88,40 +88,14 @@ plot(x,cpVentreN,'k-', 'DisplayName','Newton')
 hold on
 plot(x,cpVentreB,'b-','DisplayName','Buseman')
 hold on
-plot(x,cpVentreC,'r-.','DisplayName','Cono Tangente')
+plot(x,cpVentreC,'r-.','DisplayName','Tangent wedge')
 hold on
-plot(x,cpVentreUE,'g-.','linewidth',1,'DisplayName','Urto-espansione')
+plot(x,cpVentreUE,'g-.','linewidth',1,'DisplayName','Shock-expansion')
 hold off
-title("C_p sul ventre del profilo")
-xlabel("x")
+title("lower surface C_p")
+xlabel("x/c")
 ylabel("C_p")
 legend
 grid on
-
-%% helper functions
-
-function [Cl,Cd]=CalcClCd(alpha,thetaDorso,thetaVentre,lDorso,lVentre,cpDorso,cpVentre)
-%% calcola Cl e cd profilo 2D
-%input:
-% alpha: angolo d'attacco
-% thetaDorso: angoli geometrici pannelli dorso
-% thetaVentre: angoli geometrici pannelli ventre
-% cpDorso: distribuzione cp dorso
-% cpVentre: distribuzione cp ventre
-%output:
-% [Cl,Cd]: coefficienti di portanza e resistenza
-
-Cx= - cpDorso.*lDorso.*cos(thetaDorso + pi/2) - cpVentre.*lVentre.*cos(thetaVentre + pi/2);
-Cx=sum(Cx,'omitnan');
-
-Cy= - cpDorso.*lDorso.*sin(thetaDorso + pi/2) + cpVentre.*lVentre.*sin(thetaVentre + pi/2);
-Cy=sum(Cy,'omitnan');
-
-Cd= Cx*cos(alpha) + Cy*sin(alpha);
-Cl=-Cx*sin(alpha) + Cy*cos(alpha);
-end
-
-
-
 
 

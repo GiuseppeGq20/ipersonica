@@ -1,9 +1,11 @@
 function cp = cpCuneoTangente(Ma,n,theta)
-%% calc cp distribution con teoria del cuneo tangente
+%% calc cp distribution using tangent cone theory
 %INPUT:
 % Ma: upstream mach
 % n: gas d.o.f.
-% theta: current angle deviation vector
+% theta: current angle deviation array
+%OUTPUT:
+%cp: cp distribution
 
 cp=NaN(1,length(theta));
 

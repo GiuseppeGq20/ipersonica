@@ -24,10 +24,10 @@ ship.St=St;
 ship.Tw=900;
 
 %% dati modello di atmosfera
-atm=readtable("USSA76.dat");
-atmH=table2array(atm(:,"Quota_km_"))*1000;
-atmRho=table2array(atm(:,"Rho_kg_m3_"));
-atmT=table2array(atm(:,"T_K_"));
+atm=importdata("USSA76.dat");
+atmH=atm.data(:,1)*1000;
+atmRho=atm.data(:,4);
+atmT=atm.data(:,3);
 %% comparison
 
 %numeric solution
@@ -97,6 +97,3 @@ ylabel("H [Km]")
 xlabel("Ma_{\infty}")
 legend(Legend)
 hold off
-
-%%nota
-% sottostima flussi termici e accelerazioni rispetto al testo

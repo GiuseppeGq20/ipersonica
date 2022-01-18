@@ -1,7 +1,12 @@
-.vscode
+.vscode/
 esercizi
 __pycache__
 .ipynb_checkpoints
 .DS_Store
 matlab/MOC
 octave-workspace
+#*.png
+*.pdf
+*.html
+*.asv
+log.json
