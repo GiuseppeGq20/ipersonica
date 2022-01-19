@@ -43,3 +43,5 @@ T=@(h)interp1(atmH,atmT,h);
 [h,v,gamma,q,a] = entryNumeric(gas,ship,rho,T,g, h0, v0, gamma0);
 
 plot(gamma,h)
+xlabel("\gamma")
+ylabel("H [km]")
